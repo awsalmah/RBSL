@@ -246,10 +246,24 @@ check scene_line(ellipse(0,0,"outline","maroon"),0,40,40,0,"maroon").height ~is 
 
 fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
   image.rotate(angle * math.pi/180)
-  
-fun scale(n :: NonnegReal, image :: p.Pict):
-  image.scale(n)
 
+
+/// trying to convert an image to a pict
+import: lib("2htdp/image.rkt") as Image: expose #{save-image} as savesnip
+        lib("pict/main.rkt") as pict: expose #{bitmap} as topict
+                                      expose #{pict->bitmap} as tobitmap
+fun scale(n :: NonnegReal, image):
+  if image is_a p.Pict
+  | image.scale(n)
+  | if to_string(image) == "object:image-snip%(#'#{...}, #'#{...})" || to_string(image) == "object:pict-snip%(#'#{...}, #'#{...})"
+    | def filename = to_string(Symbol.gen("image")) ++ ".png"
+      savesnip(tobitmap(topict(image)), filename)
+      def img = p.bitmap(filename)
+      filesystem.delete(filename)
+      img.scale(n)
+    | "return an error later" // TODO
+// image-snip is directly copied from the internet, whereas pict-snip is the result of our transformations
+      
 fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
   image.scale(x,y)
 

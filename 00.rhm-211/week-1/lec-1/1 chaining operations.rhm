@@ -1,0 +1,44 @@
+#lang rhombus
+
+// Chaining operations
+
+// we can use the result of a previous operation in the next operation
+
+// one simple way to do that for now is to type in the result
+100 - 45
+
+// we can combine multiple operations on the same line
+// parentheses will be v important here
+100 - (25 + 20)
+(5 * 4) - 1
+
+// chaining operations is important because it is the cs equivalent
+// of taking two parts and putting them together.
+
+// when we build big programs, very often we will be building them
+// in parts and then putting the parts together.
+
+// Exercise 5
+// Use the Beginning Student language to multiply 10 by the sum of the numbers 123 and 456.
+10 * (123 + 456)
+
+// Exercise 6
+// Use the Beginning Student language to add the numbers 123, 456, and 789 together,
+// but do not give the + operation more than 2 inputs at once. Instead, use the +
+// operation twice, each time with just 2 inputs.
+(123 + 456) + 789
+
+// Exercise 7
+// What is wrong with each of the following formulas?
+
+// (3 + 2)
+// this is in infix notation and should be in prefix notation
+// this is fine in rhm          
+
+// (5)
+// the 5 is wrapped in () which indicates a function call
+// this is fine in rhm
+
+// ((+ 3 2))
+// same as above, there is an extra ()
+// this is in prefix notation which isn't fine in rhm
