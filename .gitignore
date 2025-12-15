@@ -1,9 +1,13 @@
-.DS_Store
+# Racket compiled files
 compiled/
-/doc/
+
+# common backups, autosaves, lock files, OS meta-files
 *~
+\#*
+.\#*
+doc/
+.DS_Store
 *.bak
 *.rkt~
 *.rhm~
-\#*
-.\#*
+TAGS
