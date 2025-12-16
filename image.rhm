@@ -1,7 +1,4 @@
-;; ship stands for ShortHandImageProgram
-;; to_do: fix the text size -- done
-;; add more tests
-                 
+;; TODO: add more tests        
 #lang rhombus
 
 import: pict as p
@@ -248,22 +245,29 @@ fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
   image.rotate(angle * math.pi/180)
 
 
-/// trying to convert an image to a pict
+/// TODO: trying to convert an image to a pict
 import: lib("2htdp/image.rkt") as Image: expose #{save-image} as savesnip
         lib("pict/main.rkt") as pict: expose #{bitmap} as topict
                                       expose #{pict->bitmap} as tobitmap
 fun scale(n :: NonnegReal, image):
   if image is_a p.Pict
   | image.scale(n)
-  | if to_string(image) == "object:image-snip%(#'#{...}, #'#{...})" || to_string(image) == "object:pict-snip%(#'#{...}, #'#{...})"
-    | def filename = to_string(Symbol.gen("image")) ++ ".png"
-      savesnip(tobitmap(topict(image)), filename)
-      def img = p.bitmap(filename)
-      filesystem.delete(filename)
-      img.scale(n)
-    | "return an error later" // TODO
-// image-snip is directly copied from the internet, whereas pict-snip is the result of our transformations
-      
+  | sniptopict(image,"scale", "2nd").scale(n)
+
+// an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
+fun sniptopict(image,fun_id, index):
+  if to_string(image) in {"object:image-snip%(#'#{...}, #'#{...})",
+                          "object:pict-snip%(#'#{...}, #'#{...})"}
+  | def file_name = to_string(Symbol.gen("image")) ++ ".png"
+    savesnip(tobitmap(topict(image)), file_name)
+    def img = p.bitmap(file_name)
+    filesystem.delete(file_name)
+    img
+  | error(~who: to_string(fun_id),
+          "expects a picture as " ++ index ++ " argument",
+          ~details: ["given:",image])
+  // TODO ^^
+             
 fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
   image.scale(x,y)
 
@@ -283,13 +287,10 @@ fun place_images(i :: List.of(p.Pict), p :: List.of(posn), scene :: p.Pict):
 // middle and center ==
 // topline
 // "top", "bottom", "middle", "center", "baseline", "pinhole".
-fun y_place(x): 
-  cond
-  | x == "top": #'top
-  | x == "topline": #'topline
-  | x == "center": #'center
-  | x == "baseline": #'baseline
-  | x == "bottom": #'bottom
+fun y_place(x):
+  if x in {"top", "topline", "center", "baseline", "bottom"}
+  | Symbol.from_string(x)
+  | "return error" //todo
 
 //missing arg?
 fun beside_align(y, x1 :: p.Pict, x2 :: p.Pict, x3 :: p.Pict, ...):
@@ -297,11 +298,12 @@ fun beside_align(y, x1 :: p.Pict, x2 :: p.Pict, x3 :: p.Pict, ...):
 
 //did not do pinhole here so ask about it
 // "left", "right", "middle" == "center", "".
-fun x_place(x):
+fun x_place(x):                        
   cond
   | x == "left": #'left
   | x == "center" || x == "middle": #'center
   | x == "right": #'right
+  | ~else : "error"
 
 // overlay must expect at least 2 args
 fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
