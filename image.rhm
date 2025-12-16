@@ -31,7 +31,24 @@ export: mode_to_color
         beside_align
         overlay_align
         above_align
-        
+
+// an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
+fun sniptopict(image,fun_id = "fun", index ="1st"):
+  if image is_a p.Pict
+  | image
+  | if to_string(image) in {"object:image-snip%(#'#{...}, #'#{...})",
+                            "object:pict-snip%(#'#{...}, #'#{...})"}
+    | def file_name = to_string(Symbol.gen("image")) ++ ".png"
+      savesnip(tobitmap(topict(image)), file_name)
+      def img = p.bitmap(file_name)
+      filesystem.delete(file_name)
+      img
+    | error(~who: to_string(fun_id),
+            "expects a picture as " ++ index ++ " argument",
+            ~details: ["given:",image])
+  // TODO ^^
+
+
 // check make pen
 // call racket functions from 2htdp img
 // unit testing: test: text, place_image, rotate
@@ -172,8 +189,10 @@ fun star(side_length :: Number, mode, color :: String || draw.Color):
 check star(40,"solid","gray").width ~is 65.0
 check star(40,"solid","gray").height ~is 62.0
   
-fun overlay(x :: p.Pict,...): 
-  p.overlay(~order:#'back,x,...)
+fun overlay(x, y, z,...):
+  def [xp, yp, zp, ...] = [sniptopict(x), sniptopict(y), sniptopict(z), ...]
+  //| p.overlay(~order:#'back,x, y, z,...)
+  p.overlay(~order:#'back,xp, yp, zp,...)
 
 fun underlay(x :: p.Pict,...): 
   p.overlay(~order:#'front,x,...)
@@ -193,8 +212,8 @@ check overlay(ellipse(10,10,"solid","red"),
               ellipse(50,50,"solid","red"),
               ellipse(60,60,"solid","black"),).height ~is 60
 
-fun beside(x :: p.Pict,...): 
-  p.beside(x,...)
+fun beside(x, y, z, ...): 
+  p.beside(sniptopict(x), sniptopict(y), sniptopict(z), ...)
 
 check beside(ellipse(20,70,"solid","gray"),
              ellipse(20,50,"solid","darkgray"),
@@ -225,8 +244,10 @@ check empty_scene(160,90).height ~is 90
 check empty_scene(200,200).width ~is 200
 check empty_scene(200,200).height ~is 200
 
-fun place_image(image :: p.Pict, x :: Real, y :: Real, scene :: p.Pict):
-  p.pin(~on: scene,~at: p.Find.left_top(scene,~dx:x,~dy:y),~pinhole: p.Find.center(image),image).clip()
+fun place_image(image, x :: Real, y :: Real, scene):
+  def new_scene = sniptopict(scene)
+  def new_img = sniptopict(image)
+  p.pin(~on: new_scene, ~at: p.Find.left_top(new_scene,~dx:x,~dy:y),~pinhole: p.Find.center(new_img),new_img).clip()
 
 fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
   def ln = line(x2-x1,y2-y1,clr)
@@ -250,23 +271,10 @@ import: lib("2htdp/image.rkt") as Image: expose #{save-image} as savesnip
         lib("pict/main.rkt") as pict: expose #{bitmap} as topict
                                       expose #{pict->bitmap} as tobitmap
 fun scale(n :: NonnegReal, image):
-  if image is_a p.Pict
-  | image.scale(n)
-  | sniptopict(image,"scale", "2nd").scale(n)
-
-// an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
-fun sniptopict(image,fun_id, index):
-  if to_string(image) in {"object:image-snip%(#'#{...}, #'#{...})",
-                          "object:pict-snip%(#'#{...}, #'#{...})"}
-  | def file_name = to_string(Symbol.gen("image")) ++ ".png"
-    savesnip(tobitmap(topict(image)), file_name)
-    def img = p.bitmap(file_name)
-    filesystem.delete(file_name)
-    img
-  | error(~who: to_string(fun_id),
-          "expects a picture as " ++ index ++ " argument",
-          ~details: ["given:",image])
-  // TODO ^^
+  //if image is_a p.Pict
+  //| image.scale(n)
+  //| sniptopict(image,"scale", "2nd").scale(n)
+  sniptopict(image,"scale", "2nd").scale(n)
              
 fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
   image.scale(x,y)
