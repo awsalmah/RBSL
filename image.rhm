@@ -33,6 +33,7 @@ export: mode_to_color
         above_align
 
 // an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
+        // use image? or pict? from racket and use from_handle
 fun sniptopict(image,fun_id = "fun", index ="1st"):
   if image is_a p.Pict
   | image
