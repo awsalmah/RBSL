@@ -1,0 +1,13 @@
+#lang rhombus/and_meta
+
+export:
+  rename:
+    let as define
+    
+decl.macro 'let $(x :: Identifier) = $(y :: Group)' : 'def $x = $y'
+
+//let x = 1
+
+def x = 1
+def y :
+  1
