@@ -3,11 +3,22 @@
 export:
   rename:
     let as define
+    exponent as expt
+    math.pi as pi
+    rndm as random
+  function
     
-decl.macro 'let $(x :: Identifier) = $(y :: Group)' : 'def $x = $y'
+decl.macro 'let $(x :: Identifier) = $(y :: Group)' :
+  'def $x = $y'
 
-//let x = 1
+decl.macro 'function $fun_id($arg, ...) : $body ...' :
+  'fun $fun_id($arg, ...): $body ...'
 
-def x = 1
-def y :
+expr.macro 'exponent($b, $p)' : 'math.expt($b, $p)'
+
+expr.macro 'rndm($num)' : 'math.random(0, $num)'
+let x = 1
+
+def y = 1
+def z :
   1

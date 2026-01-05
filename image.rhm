@@ -31,6 +31,8 @@ export: mode_to_color
         beside_align
         overlay_align
         above_align
+        rename:
+          draw.Color as make_color
 
 // an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
         // use image? or pict? from racket and use from_handle
