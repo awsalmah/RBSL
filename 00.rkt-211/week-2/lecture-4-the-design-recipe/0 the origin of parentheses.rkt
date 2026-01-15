@@ -32,7 +32,7 @@
 ; Exercise 1
 ; Put the missing closing parenthesis in the right place:
 ; (place-image (scale 2 bicycle horizontal-position 150 (empty-scene 300 300))
-; (place-image (scale 2) bicycle horizontal-position 150 (empty-scene 300 300))
+; (place-image (scale 2 bicycle) horizontal-position 150 (empty-scene 300 300))
 ; Put the fixed expression in a comment.
 
 ; Exercise 2

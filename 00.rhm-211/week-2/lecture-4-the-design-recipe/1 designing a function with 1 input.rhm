@@ -1,0 +1,62 @@
+; Designing a function with 1 input                                 
+#lang rhombus/and_meta
+import:
+  "../../../image.rhm" open
+  "../../../universe.rhm" open
+  "../../../rbsl-macros.rhm" open
+
+// The design recipe is a 6 step process that can be used to design
+// any program.
+
+// 1. Data definitions
+
+// A Temperature is a Number
+
+// 2. Signature, purpose, header
+
+// ftoc : Temperature -> Temperature
+// convert Farenheit to Celsius
+//function ftoc(f): ...
+
+// 3. Function examples
+// given: 32     expect: 0
+// given: 212    expect: 100
+
+// 4. Function template
+// function ftoc(f): f ...
+  
+// 5. Function definition
+function ftoc(f): (f - 32) / 1.8
+
+// 6. Testing
+check_expect(ftoc(32), 0)
+check_expect(ftoc(212), 100)
+
+// NOTE: purpose statements shouldn't reiterate the same information as the signature.
+
+// Exercise 3
+// Design a function named ctok that converts a temperature in Celsius to a temperature in Kelvin. Start by copying the following list of steps into your Definitions Window:
+
+// Exercise 3
+     
+// 1. Data definitions
+// A Temperature is a Number
+
+// 2. Signature, purpose, header
+// ctok : Temperature -> Temperature
+// convert Celsius to Kelvin
+// function ctok(c): ...
+
+// 3. Function examples
+// given: 0      expect: 273.15
+// given: 100    expect: 373.15
+
+// 4. Function template
+// function ctok(c): ... c ...
+
+// 5. Function definition
+function ctok(c): c +  273.15
+
+// 6. Testing
+check_expect(ctok(0), 273.15)
+check_expect(ctok(100), 373.15)

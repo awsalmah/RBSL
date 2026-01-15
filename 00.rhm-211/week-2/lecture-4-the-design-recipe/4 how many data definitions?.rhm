@@ -1,0 +1,6 @@
+; How many data definitions?
+#lang rhombus/and_meta
+
+// We can have finer distinctions and use them in our functions, but the most basic thing here is to
+// make sure that whatever words you use in your signature are already defined in your data
+// definitions or are already well known data definitions such as numbers.

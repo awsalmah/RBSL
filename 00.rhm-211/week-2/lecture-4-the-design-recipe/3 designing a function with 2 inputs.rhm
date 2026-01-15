@@ -1,0 +1,60 @@
+; Designing a function with 2 inputs
+#lang rhombus/and_meta
+import:
+  "../../../image.rhm" open
+  "../../../universe.rhm" open
+  "../../../rbsl-macros.rhm" open
+  
+// 1. Data definitions
+// A Height is a Number
+
+// 2. Signature, purpose, header
+
+//fitocm : Height Height -> Height
+// convert feet and inches to centimeters
+// function fitocm(f, i): ...
+
+// 3. Function examples
+
+// 4. Function template
+// function fitocm(f, i): ... f i ...
+
+// 5. Function definition
+function fitocm(f, i): (30 * f) + (2.5 * i)
+
+// 6. Testing
+check_expect(fitocm(0, 0), 0)
+check_expect(fitocm(0, 1), 2.5)
+check_expect(fitocm(1, 0), 30)
+check_expect(fitocm(6, 0), 180)
+check_expect(fitocm(5, 10), 175)
+
+// Exercise 5
+// Design a function named coins that takes as inputs how many nickels and how many dimes I have and
+// calculates how many dollars I have in those coins.
+// Hint: If you need to review how to write a template, you can watch this additional video.
+
+// 1. Data definitions
+// A Coin is a Number
+// A Dollar is a Number
+
+// 2. Signature, purpose, header
+
+// coins : Coin Coin -> Dollar
+// calculates dollars we have in coins
+// function coins(n, d) : ...
+
+// 3.  Function examples
+
+// 4. Function template
+// function coins(n, d) : ... n d ...
+
+// 5. Function header
+function coins(n, d) : (n * 0.05) + (d * 0.10)
+                       
+// 6. Testing
+check_expect(coins(0, 0), 0)
+check_expect(coins(0, 10), 1)
+check_expect(coins(20, 0), 1)
+check_expect(coins(10, 5), 1)
+check_expect(coins(15, 10), 1.75)
