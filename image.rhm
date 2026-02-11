@@ -270,7 +270,7 @@ fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
 
 
 /// TODO: trying to convert an image to a pict
-import: lib("2htdp/image.rkt") as Image: expose #{save-image} as savesnip
+import: lib("2htdp/image.rkt") : expose #{save-image} as savesnip
         lib("pict/main.rkt") as pict: expose #{bitmap} as topict
                                       expose #{pict->bitmap} as tobitmap
 fun scale(n :: NonnegReal, image):

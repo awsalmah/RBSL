@@ -52,7 +52,7 @@
 ; 4. Function template
 ; (define (coins n d) (... n d ...))
 
-; 5. Function header
+; 5. Function definition
 (define (coins n d) (+ (* n 0.05) (* d 0.10)))
 
 ; 6. Testing

@@ -1,0 +1,107 @@
+#lang rhombus
+
+import:
+  "../../../image.rhm" open
+  "../../../universe.rhm" open
+  "../../../rbsl-macros.rhm" open
+
+// Lecture 5 : Multiple cases
+// 1 Booleans and conditions
+
+// A Boolean is one of:
+// - #true
+// - #false
+
+// > : Number Number -> Boolean
+// < : Number Number -> Boolean
+// = : Number Number -> Boolean
+// >= : Number Number -> Boolean
+// <= : Number Number -> Boolean
+// To compute numbers in BSL
+
+35 > 29
+20 < 29
+true
+false
+10 <= 29
+// (10 <= 20) <= 29 turn this into a series of "<=" and "ands"
+
+#//
+cond | QUESTION : ANSWER
+     | QUESTION : ANSWER
+     | QUESTION : ANSWER
+     | QUESTION : ANSWER
+
+// define rr = 20
+define rr = 35
+
+// todo:
+// found operators without declared precedence or associativity operator kind: expression operator
+// todo: deal with parentheses
+
+cond | ((10 <= rr) && (rr <= 29)) : 4
+     | rr > 29 : 3
+     | ((6 <= rr) && (rr <= 9)) : 2
+     | ((1 <= rr) && (rr <= 5)) : 1
+     | rr == 0 : 0
+                 
+
+/*
+// Exercise 1
+// Copy the three conditionals below into your Definitions Window. What are their results?
+
+
+(cond [(< 100 32) "solid"]
+      [(<= 32 100 212) "liquid"]
+      [(> 100 212) "gas"])
+// = ???
+// = ...
+#//#// = (cond [(< 100 32) "solid"]
+             [(<= 32 100 212) "liquid"]
+             [(> 100 212) "gas"])
+#//#// = (cond [#false "solid"]
+             [(<= 32 100 212) "liquid"]
+             [(> 100 212) "gas"])
+#//#// = (cond [(<= 32 100 212) "liquid"]
+             [(> 100 212) "gas"])
+#//#// = (cond [#true "liquid"]
+             [(> 100 212) "gas"])
+// = "liquid"
+
+
+
+
+(cond [(< -40 32) "solid"]
+      [(<= 32 -40 212) "liquid"]
+      [(> -40 212) "gas"])
+// = ???
+// = ...
+#// #// = (cond [(< -40 32) "solid"]
+      [(<= 32 -40 212) "liquid"]
+      [(> -40 212) "gas"])
+#// #// = (cond [#true "solid"]
+      [(<= 32 -40 212) "liquid"]
+      [(> -40 212) "gas"])
+// = "solid"
+
+
+   
+(cond [(< 450 32) "solid"]
+      [(<= 32 450 212) "liquid"]
+      [(> 450 212) "gas"])
+// = ???
+// = ...
+#//#// = (cond [(< 450 32) "solid"]
+      [(<= 32 450 212) "liquid"]
+      [(> 450 212) "gas"])
+#//#// = (cond [#false "solid"]
+      [(<= 32 450 212) "liquid"]
+      [(> 450 212) "gas"])
+#//#// = (cond [(<= 32 450 212) "liquid"]
+      [(> 450 212) "gas"])
+#//#// = (cond [#false "liquid"]
+      [(> 450 212) "gas"])
+#//#// = (cond [(> 450 212) "gas"])
+#//#// = (cond [#true "gas"])
+// = "gas"
+*/
