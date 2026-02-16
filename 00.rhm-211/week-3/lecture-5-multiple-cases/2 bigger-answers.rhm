@@ -1,0 +1,24 @@
+#lang rhombus
+
+import:
+  "../../../image.rhm" open
+  "../../../universe.rhm" open
+  "../../../rbsl-macros.rhm" open
+
+// bigger numbers
+
+// tax : Number -> Number
+// compute the income tax of some single person with the given income
+// function tax(income) : ...
+
+// function tax(income) : ... income ...
+
+function tax(income) :
+  cond
+  | income < 9700 : 0.10 * income
+  | else : (9700 * 0.10) + (0.12 * (income - 9700))
+
+check_expect(tax(4980), 498)
+check_expect(tax(19975), 2203)
+
+// when the last case of a cond is an else, it means always fall back to this case if nothing else comes out to be true

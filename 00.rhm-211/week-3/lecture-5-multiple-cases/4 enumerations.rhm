@@ -1,0 +1,155 @@
+#lang rhombus
+import:
+  "../../../image.rhm" open
+  "../../../universe.rhm" open
+  "../../../rbsl-macros.rhm" open
+
+// Enumerations
+
+// data definitions built up of lists of specific data examples are called enumerations e.g. boolean
+
+// A Temperature is a Number
+
+// A Color is a String
+
+
+// A Boolean is one of:
+// - #true
+// - #false
+
+// A Time is one of:
+// - a number less than 100
+// - a number at least 100
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+
+// draw-tl : TrafficLight -> Image
+// draws a simple traffic light
+// function draw_tl(tl): ...
+
+// 3. Examples
+define background = rectangle(100, 300, "solid", "black")
+/*
+(check-expect (draw-tl "red")
+              (place-image (circle 40 "solid" "red") 50 50 background))
+(check-expect (draw-tl "yellow")
+              (place-image (circle 40 "solid" "yellow") 50 150 background))
+(check-expect (draw-tl "green")
+              (place-image (circle 40 "solid" "green") 50 250 background))
+*/
+
+// 4. Function header
+/*
+(define (draw-tl tl)
+    (cond [(string=? tl "red") ...]
+          [(string=? tl "yellow") ...]
+          [(string=? tl "green") ...]))
+*/
+
+// 5. Function body
+function draw_tl(tl):
+  cond
+  |iseqstring(tl, "red") : place_image(circle(40, "solid", "red"), 50, 50, background)
+  |iseqstring(tl, "yellow") : place_image(circle(40, "solid", "yellow"), 50, 150, background)
+  |iseqstring(tl, "green") : place_image(circle(40, "solid", "green"), 50, 250, background)
+
+
+// Exercise 4
+// Design a function called next-tl that takes a traffic light as input and returns the next traffic light. Hint: you can reuse the data definition and template written in the video above.
+
+// 1. Data definitions
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+
+// next-tl : TrafficLight -> TrafficLight
+// returns the next TrafficLight
+// function next_tl(tl) : ...
+
+// 4. Function Header
+/*
+#//(define (next-tl tl)
+    (cond [(string=? tl "red") ...]
+          [(string=? tl "yellow") ...]
+          [(string=? tl "green") ...]))
+*/
+
+// 5. Function body
+function next_tl(tl) :
+  cond
+  |iseqstring(tl, "red") : "green"
+  |iseqstring(tl, "yellow") : "red"
+  |iseqstring(tl, "green") : "yellow"
+
+// 3. Examples
+check_expect(next_tl("red"), "green")
+check_expect(next_tl("yellow"), "red")
+check_expect(next_tl("green"), "yellow")
+
+
+// Exercise 5. In order to handle clicking and dragging and moving of the mouse, we will need to design functions that take a MouseEvent as input. Here is the data definition for a MouseEvent:
+
+// A MouseEvent is one of:
+// - "button-down"
+// - "button-up"
+// - "move"
+// - "drag"
+// - "enter"
+// - "leave"
+
+// Write the template for a function that processes a MouseEvent. Make your template look like a function called process-mouseevent, and do not put it in a comment.
+
+// 1. Data definitions
+
+// A MouseEvent is one of:
+// - "button-down"
+// - "button-up"
+// - "move"
+// - "drag"
+// - "enter"
+// - "leave"
+
+// 2. Signature, purpose, header
+// process-mouseevent : MouseEvent -> ME
+// returns a short string that corresponds to the mouseevent
+// (define (process-mouseevent me) ...)
+// function process_mouseevent(me) : ...
+
+// 4. Function template
+/*
+(define (process-mouseevent me)
+    (cond
+      [(string=? me "button-up") ...]
+      [(string=? me "button-down") ...]
+      [(string=? me "move") ...]
+      [(string=? me "drag") ...]
+      [(string=? me "enter") ...]
+      [(string=? me "leave") ...]))
+*/
+
+// 5. Function definition
+function process_mouseevent(me) :
+  cond
+  | iseqstring(me, "button-up") : "u"
+  | iseqstring(me, "button-down") : "d"
+  | iseqstring(me, "move") : "m"
+  | iseqstring(me, "drag") : "drg"
+  | iseqstring(me, "enter") : "e"
+  | iseqstring(me, "leave") : "l"
+
+// 3. Examples
+check_expect(process_mouseevent("button-up"), "u")
+check_expect(process_mouseevent("button-down"), "d")
+check_expect(process_mouseevent("move"), "m")
+check_expect(process_mouseevent("drag"), "drg")
+check_expect(process_mouseevent("enter"), "e")
+check_expect(process_mouseevent("leave"), "l")

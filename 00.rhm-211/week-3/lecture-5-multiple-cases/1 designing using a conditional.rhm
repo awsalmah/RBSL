@@ -1,0 +1,67 @@
+#lang rhombus
+
+import:
+  "../../../image.rhm" open
+  "../../../universe.rhm" open
+  "../../../rbsl-macros.rhm" open
+  
+                         
+// Desigining using a conditional
+
+// A Boolean is one of:
+// - #true
+// - #false
+
+// > : Number Number -> Boolean
+// < : Number Number -> Boolean
+// = : Number Number -> Boolean
+// >= : Number Number -> Boolean
+// <= : Number Number -> Boolean
+
+// rate-points : Number -> Number
+// convert respiratory rate into trauma points
+// function rate_points(rr) : ...
+
+// It's important to write examples for every case in a conditional
+
+// function rate_points(rr) : ... rr ...
+
+function rate_points(rr) :
+  cond
+  | ((10 <= rr) && (rr <= 29)) : 4
+  | (rr > 29) : 3
+  | ((6 <= rr) && (rr <= 9)) : 2
+  | ((1 <= rr) && (rr <= 5)) : 1
+  | rr == 0 : 0
+
+check_expect(rate_points(20), 4)
+check_expect(rate_points(35), 3)
+check_expect(rate_points(8), 2)
+check_expect(rate_points(3), 1)
+check_expect(rate_points(0), 0)
+
+// Exercise 2
+// Design a function called bp-points to convert the patient’s systolic blood pressure into a coded value. Use the same table we used for the respiratory rate:
+
+// bp-points : Number -> Number
+// converts systolic blood pressure into trauma points
+// function bp_points(sbp) : ...
+
+// function bp_points(sbp) : ... sbp ...
+
+// && infix 5
+// <= infix 3
+
+function bp_points(sbp) :
+  cond
+  | sbp > 89 : 4
+  | (76 <= sbp) && (sbp <= 89) : 3
+  | (50 <= sbp) && (sbp <= 75) : 2
+  | (1 <= sbp) && (sbp <= 49) : 1
+  | (sbp == 0) : 0
+
+check_expect(bp_points(100), 4)
+check_expect(bp_points(80), 3)
+check_expect(bp_points(60), 2)
+check_expect(bp_points(40), 1)
+check_expect(bp_points(0), 0)
