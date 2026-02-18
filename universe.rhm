@@ -15,19 +15,20 @@ import: "image.rhm" open
 export: animate
         big_bang
 
-expr.macro 'big_bang $(init :: expr_meta.Parsed):
+expr.macro
+|'big_bang $(_init :: expr_meta.Parsed):
               ~draw: $(_draw :: expr_meta.Parsed)
-              ~tick: $(tick :: expr_meta.Parsed)
+              ~tick: $(_tick :: expr_meta.Parsed)
               ~key: $(_key :: expr_meta.Parsed)
-              ~mouse: $(mouse :: expr_meta.Parsed)':
+              ~mouse: $(_mouse :: expr_meta.Parsed)':
   'block:
      let draw = fun (w): pict.to_bitmap($_draw(w))
      let key = fun(w, k): $_key(w, to_string(k))
-     $(expr_meta.pack_s_exp(['_big_bang', init,
-                             ['_on_tick', tick],
+     $(expr_meta.pack_s_exp(['_big_bang', _init,
+                             ['_on_tick', _tick],
                              ['_to_draw', 'draw'],
                              ['_on_key', 'key'],
-                             ['_on_mouse', mouse]]))'
+                             ['_on_mouse', _mouse]]))'
   
 fun draw(n):
   image.overlay(image.circle(~size: n),
