@@ -1,5 +1,5 @@
+; #lang shrubbery "../../../rbsl-macros.rhm"
 #lang rhombus
-
 // DrRacket as a calculator
 
 // To use DrRacket as a calculator, go to the bottom half of DrRacket (the REPL/interactions window)

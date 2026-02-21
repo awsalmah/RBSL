@@ -1,0 +1,21 @@
+#lang shrubbery "../../../rbsl.rhm"
+
+// DrRacket as a calculator
+
+// To use DrRacket as a calculator, go to the bottom half of DrRacket (the REPL/interactions window)
+// and enter something you want to calculate.
+25
+
+// Here is how you make any operation happen in BSL
+25 - 20
+25 + 20
+25 * 20
+25 / 20
+
+// Exercise 3
+// Use the Beginning Student language to add the numbers 123 and 456 together.
+123 + 456
+
+// Exercise 4
+// Use the Beginning Student language to add the numbers 123, 456, and 789 together. (Hint: the + operation can take more than 2 inputs at once.)
+123 + 456 + 789

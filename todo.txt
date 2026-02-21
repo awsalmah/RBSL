@@ -1,0 +1,16 @@
+Used:
++
+-
+*
+/
+() with the above
+scale
+beside
+
+Todo:
+Finish lec 1 (5 images.rhm & c.)
+Add the check-expect print message if all tests pass
+Fix check-expect for picts
+Pict-snip to bitmap
+Image-snip to bitmap
+Pict to bitmap
