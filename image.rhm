@@ -5,6 +5,9 @@ import: pict as p
         pict/radial as pr
         draw
         rhombus/rx open
+        lib("racket/gui/base.rkt") : expose #{image-snip%} as img_snip
+        lib("racket/class.rkt") : expose #{is-a?} as rkt_is_a
+        "image-helper.rkt" as ih
         
 export: mode_to_color
         circle
@@ -33,6 +36,19 @@ export: mode_to_color
         above_align
         rename:
           draw.Color as make_color
+
+
+fun to_pict(image):
+  if image is_a p.Pict
+  | image
+  | if rkt_is_a(image, img_snip)
+    | p.Pict.from_handle(ih.img_snip_to_pict(image))
+    | error("expected a picture")
+    /*
+    | error(~who: to_string(fun_id),
+            "expects a picture as " ++ index ++ " argument",
+            ~details: ["given:",image])
+    */
 
 // an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
         // use image? or pict? from racket and use from_handle
@@ -274,10 +290,7 @@ import: lib("2htdp/image.rkt") : expose #{save-image} as savesnip
         lib("pict/main.rkt") as pict: expose #{bitmap} as topict
                                       expose #{pict->bitmap} as tobitmap
 fun scale(n :: NonnegReal, image):
-  //if image is_a p.Pict
-  //| image.scale(n)
-  //| sniptopict(image,"scale", "2nd").scale(n)
-  sniptopict(image,"scale", "2nd").scale(n)
+  to_pict(image).scale(n)
              
 fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
   image.scale(x,y)
