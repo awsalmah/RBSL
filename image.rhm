@@ -8,7 +8,10 @@ import: pict as p
         lib("racket/gui/base.rkt") : expose #{image-snip%} as img_snip
         lib("racket/class.rkt") : expose #{is-a?} as rkt_is_a
         "image-helper.rkt" as ih
-        
+        /// deprecated TODO: trying to convert an image to a pict
+        lib("2htdp/image.rkt") : expose #{save-image} as savesnip
+        lib("pict/main.rkt") as pict: expose #{bitmap} as topict
+                                      expose #{pict->bitmap} as tobitmap
 export: mode_to_color
         circle
         ellipse
@@ -50,7 +53,8 @@ fun to_pict(image):
             ~details: ["given:",image])
     */
 
-// an image with annotation image-snip is directly copied from the internet into DrRacket, whereas an image with pict-snip is the result of our transformations
+// an image with annotation image-snip is directly copied from the internet into DrRacket,
+// whereas an image with pict-snip is the result of our transformations
         // use image? or pict? from racket and use from_handle
 fun sniptopict(image,fun_id = "fun", index ="1st"):
   if image is_a p.Pict
@@ -209,7 +213,7 @@ check star(40,"solid","gray").width ~is 65.0
 check star(40,"solid","gray").height ~is 62.0
   
 fun overlay(x, y, z,...):
-  def [xp, yp, zp, ...] = [sniptopict(x), sniptopict(y), sniptopict(z), ...]
+  def [xp, yp, zp, ...] = [to_pict(x), to_pict(y), to_pict(z), ...]
   //| p.overlay(~order:#'back,x, y, z,...)
   p.overlay(~order:#'back,xp, yp, zp,...)
 
@@ -232,7 +236,7 @@ check overlay(ellipse(10,10,"solid","red"),
               ellipse(60,60,"solid","black"),).height ~is 60
 
 fun beside(x, y, z, ...): 
-  p.beside(sniptopict(x), sniptopict(y), sniptopict(z), ...)
+  p.beside(to_pict(x), to_pict(y), to_pict(z), ...)
 
 check beside(ellipse(20,70,"solid","gray"),
              ellipse(20,50,"solid","darkgray"),
@@ -264,8 +268,8 @@ check empty_scene(200,200).width ~is 200
 check empty_scene(200,200).height ~is 200
 
 fun place_image(image, x :: Real, y :: Real, scene):
-  def new_scene = sniptopict(scene)
-  def new_img = sniptopict(image)
+  def new_scene = to_pict(scene)
+  def new_img = to_pict(image)
   p.pin(~on: new_scene, ~at: p.Find.left_top(new_scene,~dx:x,~dy:y),~pinhole: p.Find.center(new_img),new_img).clip()
 
 fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
@@ -285,10 +289,6 @@ fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
   image.rotate(angle * math.pi/180)
 
 
-/// TODO: trying to convert an image to a pict
-import: lib("2htdp/image.rkt") : expose #{save-image} as savesnip
-        lib("pict/main.rkt") as pict: expose #{bitmap} as topict
-                                      expose #{pict->bitmap} as tobitmap
 fun scale(n :: NonnegReal, image):
   to_pict(image).scale(n)
              

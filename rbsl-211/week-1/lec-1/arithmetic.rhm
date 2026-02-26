@@ -1,0 +1,11 @@
+#lang shrubbery "../../../rbsl.rhm"
+
+// remaining cash
+100 - (25 + 20)
+// = 100 - 45
+// = 55
+
+// favorite ice cream flavor
+(5 * 4) - 1
+// = 20 - 1
+// = 19
