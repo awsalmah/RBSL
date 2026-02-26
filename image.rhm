@@ -14,16 +14,16 @@ export: mode_to_color
         //ellipse
         //line
         text
-        //triangle
+        triangle
         //square
-        //rectangle
+        rectangle
         //rhombus
         //star
         overlay
         //underlay
         beside
-        //above
-        //empty_scene
+        above
+        empty_scene
         place_image
         //scene_line
         //rotate
@@ -34,8 +34,8 @@ export: mode_to_color
         //beside_align
         //overlay_align
         //above_align
-        //rename:
-          //draw.Color as make_color
+        rename:
+          draw.Color as make_color // might need to modify this later
 
 
 fun to_pict(image):
