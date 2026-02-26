@@ -6,11 +6,17 @@ Used:
 () with the above
 scale
 beside
+overlay
+place_image
+text
+def
 
 Todo:
-Finish lec 1 (5 images.rhm & c.)
-Add the check-expect print message if all tests pass
+Finish lec 2, lab 1 and pset 1 
+Update the check-expect to print a message if all tests pass and if they don't
 Fix check-expect for picts
-Pict-snip to bitmap
-Image-snip to bitmap
-Pict to bitmap
+	Fix Image/Pict-snip to bitmap
+Clean up the Pict/Snip to bitmap file
+Clean the image and rbsl files
+Read Metaprogramming in rhombus
+Fear of Macros 

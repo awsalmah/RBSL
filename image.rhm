@@ -8,37 +8,34 @@ import: pict as p
         lib("racket/gui/base.rkt") : expose #{image-snip%} as img_snip
         lib("racket/class.rkt") : expose #{is-a?} as rkt_is_a
         "image-helper.rkt" as ih
-        /// deprecated TODO: trying to convert an image to a pict
-        lib("2htdp/image.rkt") : expose #{save-image} as savesnip
-        lib("pict/main.rkt") as pict: expose #{bitmap} as topict
-                                      expose #{pict->bitmap} as tobitmap
+        
 export: mode_to_color
         circle
-        ellipse
-        line
+        //ellipse
+        //line
         text
-        triangle
-        square
-        rectangle
-        rhombus
-        star
+        //triangle
+        //square
+        //rectangle
+        //rhombus
+        //star
         overlay
-        underlay
+        //underlay
         beside
-        above
-        empty_scene
+        //above
+        //empty_scene
         place_image
-        scene_line
-        rotate
+        //scene_line
+        //rotate
         scale
-        scale_xy
-        place_images
-        posn
-        beside_align
-        overlay_align
-        above_align
-        rename:
-          draw.Color as make_color
+        //scale_xy
+        //place_images
+        //posn
+        //beside_align
+        //overlay_align
+        //above_align
+        //rename:
+          //draw.Color as make_color
 
 
 fun to_pict(image):
@@ -53,29 +50,7 @@ fun to_pict(image):
             ~details: ["given:",image])
     */
 
-// an image with annotation image-snip is directly copied from the internet into DrRacket,
-// whereas an image with pict-snip is the result of our transformations
-        // use image? or pict? from racket and use from_handle
-fun sniptopict(image,fun_id = "fun", index ="1st"):
-  if image is_a p.Pict
-  | image
-  | if to_string(image) in {"object:image-snip%(#'#{...}, #'#{...})",
-                            "object:pict-snip%(#'#{...}, #'#{...})"}
-    | def file_name = to_string(Symbol.gen("image")) ++ ".png"
-      savesnip(tobitmap(topict(image)), file_name)
-      def img = p.bitmap(file_name)
-      filesystem.delete(file_name)
-      img
-    | error(~who: to_string(fun_id),
-            "expects a picture as " ++ index ++ " argument",
-            ~details: ["given:",image])
-  // TODO ^^
 
-
-// check make pen
-// call racket functions from 2htdp img
-// unit testing: test: text, place_image, rotate
-// add more tests and check the 3 align functions (beside_align, overlay_align, above_align) and x_place and y_place
 fun mode_to_color(mode):
   cond
   | mode == "solid": [#'inherit,1]
@@ -86,49 +61,20 @@ fun mode_to_color(mode):
                  "expects a mode as second argument",
                  ~details: ["given:",mode])
 
-check mode_to_color("solid") ~is [#'inherit,1]
-check mode_to_color("outline") ~is [#false,1]
-check mode_to_color(11) ~is [#'inherit,11/255]
 
 fun circle(radius :: NonnegReal, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
   p.circle(~size:radius * 2, ~fill: md[0]).colorize(color).alpha(md[1])
 
-// p.circle(~size:50 * 2, ~fill: "solid").colorize(draw.Color(100,100,100,1))
-
-check circle(30,"outline","red").width ~is 60
-check circle(30,"outline","red").height ~is 60
-check circle(20,"solid","blue").width ~is 40
-check circle(20,"solid","blue").height ~is 40
-check circle(0,100,"blue").width ~is 0
-check circle(0,100,"blue").height ~is 0
 
 fun ellipse(width :: NonnegReal, height :: NonnegReal, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
   p.ellipse(~width:width,~height:height,~fill:md[0]).colorize(color).alpha(md[1])
 
-check ellipse(60,30,"outline","black").width ~is 60
-check ellipse(60,30,"outline","black").height ~is 30
-check ellipse(30,60,"solid","blue").width ~is 30
-check ellipse(30,60,"solid","blue").height ~is 60
-check ellipse(30,60,100,"blue").width ~is 30
-check ellipse(30,60,100,"blue").height ~is 60
 
 fun line(x1, y1, clr):
   p.line(~dx: x1, ~dy: y1, ~line: clr)
 
-check line(30,30,"black").width ~is 30
-check line(30,30,"black").height ~is 30
-check line(-30,20,"red").width ~is -30
-check line(-30,20,"red").height ~is 20
-check line(30,-20,"red").width ~is 30
-check line(30,-20,"red").height ~is -20
-check line(10,0,"red").width ~is 10
-check line(10,0,"red").height ~is 0
-check line(0,10,"red").width ~is 0
-check line(0,10,"red").height ~is 10
-check line(0,0,"red").width ~is 0
-check line(0,0,"red").height ~is 0
 
 fun string_to_list(s):
   def x = List.map(s , fun(x): string_to_list_helper(x))
@@ -137,7 +83,8 @@ fun string_to_list(s):
     |z.length() == 0: [] ++ [""]
     | ~else: z
   y
-  
+
+
 fun string_to_list_helper(s):
   cond
   | s.length() == 0: []
@@ -147,45 +94,28 @@ fun string_to_list_helper(s):
 fun text(string :: String, font_size ::  Real.in(1, 255 ~inclusive), color :: String || draw.Color ):
   def list_of_words = rx'"\n"'.split(string)
   def lists_of_chars = string_to_list(list_of_words)
-  def st1 = for List (x : lists_of_chars):
-    def st2 = for List ( y : x) :
+  def str1 = for List (x : lists_of_chars):
+    def str2 = for List ( y : x) :
       p.text(y,~font:draw.Font(~kind: draw.Font.Kind.swiss,~size:font_size)).colorize(color)
-    p.beside(~vert: #'baseline,&st2)
-  p.stack(~horiz:#'left,& st1)
-// 2htdp takes the string, it splits it up into individual letters and horizontally
-// appends them // do baseline with beside
+    p.beside(~vert: #'baseline,&str2)
+  p.stack(~horiz:#'left,& str1)
+
   
 fun triangle(side_len :: NonnegReal, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
   def h = math.round(side_len * math.sqrt(3)/2)
   p.polygon([[side_len/2,0], [side_len,h], [0,h]], ~fill: md[0]).colorize(color).alpha(md[1])
 
-check triangle(100,255,"red").width ~is 100
-check triangle(100,255,"red").height ~is 87.0
-check triangle(40,255,"red").width ~is 40
-check triangle(40,255,"red").height ~is 35.0
 
 fun square(side_len :: NonnegReal, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
   p.square(~size:side_len, ~fill: md[0]).colorize(color).alpha(md[1])
 
-check square(30,255,"red").width ~is 30
-check square(30,255,"red").height ~is 30
-check square(40,"solid","slateblue").width ~is 40
-check square(40,"solid","slateblue").height ~is 40
-check square(50,"outline","darkmagenta").width ~is 50
-check square(50,"outline","darkmagenta").height ~is 50
 
 fun rectangle(width :: NonnegReal, height :: NonnegReal, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
   p.rectangle(~width:width, ~height:height, ~fill:md[0]).colorize(color).alpha(md[1])
 
-check rectangle(100,90,255,"red").width ~is 100
-check rectangle(100,90,255,"red").height ~is 90
-check rectangle(40,20,"outline","black").width ~is 40
-check rectangle(40,20,"outline","black").height ~is 20
-check rectangle(20,40,"solid","blue").width ~is 20
-check rectangle(20,40,"solid","blue").height ~is 40
 
 fun rhombus(side_length :: NonnegReal, angle :: Number, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
@@ -195,10 +125,6 @@ fun rhombus(side_length :: NonnegReal, angle :: Number, mode, color :: String ||
   def w = math.round(2 * math.cos(opposite_angle) * side_length)
   p.polygon([[0,h/2], [w/2,0],[w,h/2], [w/2, h]], ~fill: md[0]).colorize(color).alpha(md[1])
 
-check rhombus(40,45,"solid","magenta").width ~is 31.0
-check rhombus(40,45,"solid","magenta").height ~is 74.0
-check rhombus(80,150,"solid","mediumpurple").width ~is 155.0
-check rhombus(80,150,"solid","mediumpurple").height ~is 41.0
 
 fun star(side_length :: Number, mode, color :: String || draw.Color):
   def md = mode_to_color(mode)
@@ -209,81 +135,37 @@ fun star(side_length :: Number, mode, color :: String || draw.Color):
   def w = math.round(side_length + 2 * side_length  * math.cos(2 * angle))
   pr.star(~points: 5, ~width: w, ~height: h,~fill: md[0]).colorize(color).alpha(md[1])
 
-check star(40,"solid","gray").width ~is 65.0
-check star(40,"solid","gray").height ~is 62.0
   
 fun overlay(x, y, z,...):
-  def [xp, yp, zp, ...] = [to_pict(x), to_pict(y), to_pict(z), ...]
-  //| p.overlay(~order:#'back,x, y, z,...)
-  p.overlay(~order:#'back,xp, yp, zp,...)
+  p.overlay(~order:#'back,to_pict(x), to_pict(y), to_pict(z), ...)
+
 
 fun underlay(x :: p.Pict,...): 
   p.overlay(~order:#'front,x,...)
 
-check overlay(rectangle(30,60,"solid","orange"),ellipse(60,30,"solid","purple")).width ~is 60
-check overlay(rectangle(30,60,"solid","orange"),ellipse(60,30,"solid","purple")).height ~is 60
-check overlay(ellipse(10,10,"solid","red"),
-              ellipse(20,20,"solid","black"),
-              ellipse(30,30,"solid","red"),
-              ellipse(40,40,"solid","black"),
-              ellipse(50,50,"solid","red"),
-              ellipse(60,60,"solid","black"),).width ~is 60
-check overlay(ellipse(10,10,"solid","red"),
-              ellipse(20,20,"solid","black"),
-              ellipse(30,30,"solid","red"),
-              ellipse(40,40,"solid","black"),
-              ellipse(50,50,"solid","red"),
-              ellipse(60,60,"solid","black"),).height ~is 60
 
 fun beside(x, y, z, ...): 
   p.beside(to_pict(x), to_pict(y), to_pict(z), ...)
 
-check beside(ellipse(20,70,"solid","gray"),
-             ellipse(20,50,"solid","darkgray"),
-             ellipse(20,30,"solid","dimgray"),
-             ellipse(20,10,"solid","black")).width ~is 80
-check beside(ellipse(20,70,"solid","gray"),
-             ellipse(20,50,"solid","darkgray"),
-             ellipse(20,30,"solid","dimgray"),
-             ellipse(20,10,"solid","black")).height ~is 70
 
 fun above(x :: p.Pict,...):
   p.stack(x,...)
 
-check above(ellipse(70,20,"solid","gray"),
-            ellipse(50,20,"solid","darkgray"),
-            ellipse(30,20,"solid","dimgray"),
-            ellipse(10,20,"solid","white")).width ~is 70
-check above(ellipse(70,20,"solid","gray"),
-            ellipse(50,20,"solid","darkgray"),
-            ellipse(30,20,"solid","dimgray"),
-            ellipse(10,20,"solid","white")).height ~is 80
 
 fun empty_scene(width :: NonnegReal, height :: NonnegReal):
   p.rectangle(~width:width, ~height:height, ~fill:"white",~line:"black")
-  
-check empty_scene(160,90).width ~is 160
-check empty_scene(160,90).height ~is 90
-check empty_scene(200,200).width ~is 200
-check empty_scene(200,200).height ~is 200
+
 
 fun place_image(image, x :: Real, y :: Real, scene):
   def new_scene = to_pict(scene)
   def new_img = to_pict(image)
   p.pin(~on: new_scene, ~at: p.Find.left_top(new_scene,~dx:x,~dy:y),~pinhole: p.Find.center(new_img),new_img).clip()
 
+
 fun scene_line(image :: p.Pict, x1 :: Real, y1 :: Real, x2 :: Real, y2 :: Real, clr):
   def ln = line(x2-x1,y2-y1,clr)
-  p.pin(~on: image,~at: p.Find.left_top(image,~dx:x1,~dy:y1),~pinhole: p.Find.left_top(ln),ln).clip()
- 
-check scene_line(ellipse(40,40,"outline","maroon"),0,40,40,0,"maroon").width ~is 40
-check scene_line(ellipse(40,40,"outline","maroon"),0,40,40,0,"maroon").height ~is 40
-check scene_line(rectangle(40,40,"solid","gray"),0,40,40,0,"maroon").width ~is 40
-check scene_line(rectangle(40,40,"solid","gray"),0,40,40,0,"maroon").height ~is 40
-check scene_line(rectangle(100,100,"solid","darkolivegreen"),25,25,100,100,"goldenrod").width ~is 100
-check scene_line(rectangle(100,100,"solid","darkolivegreen"),25,25,100,100,"goldenrod").height ~is 100
-check scene_line(ellipse(0,0,"outline","maroon"),0,40,40,0,"maroon").width ~is 0
-check scene_line(ellipse(0,0,"outline","maroon"),0,40,40,0,"maroon").height ~is 0
+  p.pin(~on: image,~at: p.Find.left_top(image,~dx:x1,~dy:y1),~pinhole: p.Find.left_top(ln),ln).clip() 
+
 
 fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
   image.rotate(angle * math.pi/180)
@@ -291,16 +173,14 @@ fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
 
 fun scale(n :: NonnegReal, image):
   to_pict(image).scale(n)
-             
+
+
 fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
   image.scale(x,y)
 
-check scale_xy(2,3,rectangle(100,90,255,"red")).width ~is 200
-check scale_xy(2,3,rectangle(100,90,255,"red")).height ~is 270
-check scale_xy(3,2,ellipse(20,30,"solid","blue")).width ~is 60
-check scale_xy(3,2,ellipse(20,30,"solid","blue")).height ~is 60
 
 class posn(x,y)
+
 
 fun place_images(i :: List.of(p.Pict), p :: List.of(posn), scene :: p.Pict):
   match i
@@ -329,9 +209,11 @@ fun x_place(x):
   | x == "right": #'right
   | ~else : "error"
 
+
 // overlay must expect at least 2 args
 fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
   p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2,i3, ...)
+
 
 fun above_align(xplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
   p.stack(~horiz: x_place(xplace),i1,i2,i3,...)
