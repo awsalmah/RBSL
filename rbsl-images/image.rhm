@@ -15,10 +15,10 @@ export: mode_to_color
         //line
         text
         triangle
-        //square
+        square
         rectangle
-        //rhombus
-        //star
+        rhombus
+        star
         overlay
         //underlay
         beside
@@ -26,9 +26,9 @@ export: mode_to_color
         empty_scene
         place_image
         //scene_line
-        //rotate
+        rotate
         scale
-        //scale_xy
+        scale_xy
         //place_images
         //posn
         //beside_align

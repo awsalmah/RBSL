@@ -1,7 +1,7 @@
 ;; shup stands for ShortHandUniverseProgram
 #lang rhombus/and_meta
 
-import: "image.rhm" open
+import: "../rbsl-images/image.rhm" open
         pict as image
         lib("2htdp/universe.rkt"): expose #{big-bang} as _big_bang
                                    expose #{on-tick} as _on_tick

@@ -1,0 +1,25 @@
+#lang shrubbery "../../../rbsl.rhm"
+// 1. Data definitions
+
+// A Height is a Number
+
+// 2. Signature, purpose, header
+
+// fitocm : Height Height -> Height
+// convert feet and inches to centimeters
+//(define (fitocm f i) ...)
+
+// 3. Function examples
+check_expect(fitocm(0, 0), 0)
+check_expect(fitocm(0, 1), 2.5)
+check_expect(fitocm(1, 0), 30)
+check_expect(fitocm(6, 0), 180)
+check_expect(fitocm(5, 10), 175)
+
+// 4. Function template
+//(define (fitocm f i) (... f i ...))
+
+// 5. Function definition
+function fitocm(f, i): (30 * f) + (2.5 * i)
+
+// 6. Testing
