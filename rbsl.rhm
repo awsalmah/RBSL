@@ -4,10 +4,11 @@ import :
   rhombus/meta open
 
 export:
-  all_from(rhombus):
+  all_from(rhombus):// might have to change the all here
     except: #%module_block
             def
             fun
+            :: // check
   rename:
     module_block as #%module_block
     let as define
@@ -16,7 +17,7 @@ export:
   expt
   random
   ceiling
-  //to_string
+  //to_string // check if this is the same as string=?
   sqr
   
 // for stuff like string=? just use ==
@@ -141,21 +142,6 @@ export:
   false 
   iseqstring
 
-
-
-expr.macro 'sqr($num)' : 'math.expt($num, 2)'
-
-expr.macro 'ceil($num)' : 'math.ceiling($num)'
-
-expr.macro '$x gt $y' : '$x > $y'
-expr.macro '$x lt $y' : '$x < $y'
-expr.macro '$x numeq $y' : '$x == $y'
-expr.macro '$x gte $y' : '$x >= $y'
-expr.macro '$x lte $y' : '$x <= $y'
-
-def true = #true
-def false = #false
-
 // add a case w the literal else instead of ~else
 expr.macro
 | 'mycond
@@ -263,20 +249,9 @@ expr.macro 'check_expect($actual, $expected)' : 'check $actual ~is $expected'
     | 'check math.inexact($act) ~is math.inexact($expct)'
     | 'check $act ~is $expct'
 
-expr.macro '$x || $y ...' : let t = '$x'
-                            'block:
-                               let t = $x
-                               t
-                               t
-                               if $x
-                               | $x
-                               | $y ...'
-
-macro 'number_to_string($x)' : 'to_string($x)'
-
 
 */
 // dont provide ... or work with it rn
-// collet test and put them at the end
+// collect tests and put them at the end / in a separate module
 // work on each week and complete its macros first
 // module-begin

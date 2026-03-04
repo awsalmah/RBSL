@@ -1,5 +1,5 @@
 ;; TODO: add more tests        
-#lang rhombus
+#lang rhombus/and_meta
 
 import: pict as p
         pict/radial as pr
@@ -38,6 +38,9 @@ export: mode_to_color
           draw.Color as make_color // might need to modify this later
 
 
+annot.macro 'Image' :
+  annot_meta.pack_predicate('fun (x): x is_a p.Pict || rkt_is_a(x, img_snip)')
+                      
 fun to_pict(image):
   if image is_a p.Pict
   | image
@@ -136,7 +139,7 @@ fun star(side_length :: Number, mode, color :: String || draw.Color):
   pr.star(~points: 5, ~width: w, ~height: h,~fill: md[0]).colorize(color).alpha(md[1])
 
   
-fun overlay(x, y, z,...):
+fun overlay(x :: Image , y :: Image , z :: Image ,...):
   p.overlay(~order:#'back,to_pict(x), to_pict(y), to_pict(z), ...)
 
 
@@ -144,11 +147,11 @@ fun underlay(x :: p.Pict,...):
   p.overlay(~order:#'front,x,...)
 
 
-fun beside(x, y, z, ...): 
+fun beside(x :: Image , y :: Image , z :: Image, ...): 
   p.beside(to_pict(x), to_pict(y), to_pict(z), ...)
 
 
-fun above(x :: p.Pict,...):
+fun above(x :: Image,...):
   p.stack(x,...)
 
 
@@ -156,7 +159,7 @@ fun empty_scene(width :: NonnegReal, height :: NonnegReal):
   p.rectangle(~width:width, ~height:height, ~fill:"white",~line:"black")
 
 
-fun place_image(image, x :: Real, y :: Real, scene):
+fun place_image(image :: Image, x :: Real, y :: Real, scene :: Image):
   def new_scene = to_pict(scene)
   def new_img = to_pict(image)
   p.pin(~on: new_scene, ~at: p.Find.left_top(new_scene,~dx:x,~dy:y),~pinhole: p.Find.center(new_img),new_img).clip()
@@ -171,18 +174,18 @@ fun rotate(angle :: Number, image :: p.Pict): // rotate extends the bounding box
   image.rotate(angle * math.pi/180)
 
 
-fun scale(n :: NonnegReal, image):
+fun scale(n :: NonnegReal, image :: Image):
   to_pict(image).scale(n)
 
 
-fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: p.Pict):
+fun scale_xy(x :: NonnegReal, y :: NonnegReal, image :: Image):
   image.scale(x,y)
 
 
 class posn(x,y)
 
 
-fun place_images(i :: List.of(p.Pict), p :: List.of(posn), scene :: p.Pict):
+fun place_images(i :: List.of(Image), p :: List.of(posn), scene :: p.Pict):
   match i
   | []: scene
   | ~else: place_images(List.rest(i),List.rest(p), place_image(i[0],p[0].x,p[0].y,scene))
@@ -197,7 +200,7 @@ fun y_place(x):
   | "return error" //todo
 
 //missing arg?
-fun beside_align(y, x1 :: p.Pict, x2 :: p.Pict, x3 :: p.Pict, ...):
+fun beside_align(y, x1 :: Image, x2 :: Image, x3 :: Image, ...):
   p.beside(~vert: y_place(y), x1,x2,x3,...)
 
 //did not do pinhole here so ask about it
@@ -211,9 +214,9 @@ fun x_place(x):
 
 
 // overlay must expect at least 2 args
-fun overlay_align(xplace,yplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
+fun overlay_align(xplace,yplace,i1 :: Image, i2 :: Image, i3 :: Image, ...):
   p.overlay(~horiz: x_place(xplace), ~vert: y_place(yplace), ~order:#'back, i1,i2,i3, ...)
 
 
-fun above_align(xplace,i1 :: p.Pict,i2 :: p.Pict, i3 :: p.Pict, ...):
+fun above_align(xplace,i1 :: Image, i2 :: Image, i3 :: Image, ...):
   p.stack(~horiz: x_place(xplace),i1,i2,i3,...)
