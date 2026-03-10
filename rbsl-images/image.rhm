@@ -8,7 +8,8 @@ import: pict as p
         lib("racket/gui/base.rkt") : expose #{image-snip%} as img_snip
         lib("racket/class.rkt") : expose #{is-a?} as rkt_is_a
         "image-helper.rkt" as ih
-        
+// make annotations that do conversions : annotations as converters 7.4
+
 export: mode_to_color
         circle
         //ellipse
@@ -38,6 +39,9 @@ export: mode_to_color
           draw.Color as make_color // might need to modify this later
 
 
+
+fun img_ok(x): x is_a p.Pict || rkt_is_a(x, img_snip)
+         
 annot.macro 'Image' :
   annot_meta.pack_predicate('fun (x): x is_a p.Pict || rkt_is_a(x, img_snip)')
                       

@@ -4,6 +4,7 @@ import :
   rhombus/meta open
 
 export:
+  //#{#%module-begin}
   all_from(rhombus):// might have to change the all here
     except: #%module_block
             def
@@ -82,6 +83,8 @@ decl.macro
 // fix some of these cases
 // add checking for bound ids
 // ask about id || num
+
+// def is gonna expand to a macro that does the checking and a function
 expr.macro
 | 'expt($(x :: Identifier), $(y :: Identifier))' : 'math.expt($x, $y)'
 | 'expt($(x :: Number), $(y :: Identifier))' : 'math.expt($x, $y)'
