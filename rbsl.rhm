@@ -10,16 +10,31 @@ export:
             def
             fun
             :: // check
+            >
+            >=
+            <
+            <=
+            ==
+            cond
   rename:
     module_block as #%module_block
     let as define
     math.pi as pi
+    math.sin as sin
+    math.cos as cos
+    gt as >
+    gte as >=
+    lt as <
+    lte as <=
+    eq as ==
+    IF as cond
   function
   expt
   random
   ceiling
-  //to_string // check if this is the same as string=?
   sqr
+  true
+  false
   
 // for stuff like string=? just use ==
 // for methods just define a rkt helper module
@@ -41,7 +56,8 @@ decl.macro 'module_block: $form; ...':
     | ['check_expect($a, $b)', rest, ...] : ['check_expect($a, $b)'] ++ check_exprs([rest, ...])
     | [a, b, ...] : check_exprs([b, ...])
 
-  // print(check_exprs(ls) ++ [1+]) eval so we can do everything else? 
+  // print(check_exprs(ls) ++ [1+]) eval so we can do everything else?
+  // need to print how many tests pass instead of run and return the appropriate message
   def check_forms = check_exprs(ls)
   def num_of_checks = check_forms.length()
   def check_message = to_string(num_of_checks) ++ " of " ++ to_string(num_of_checks) ++ " tests run"
@@ -52,17 +68,18 @@ decl.macro 'module_block: $form; ...':
 // else if # of tests > 0 but not all pass -> error message?
 // else dont print anything
   if num_of_checks > 0
+
   | '#%module_block:
        $x
        ...
-       println($check_message)
-     '
-  | def [x, ...] = non_check_exprs(ls) ++ check_exprs(ls)
-    '#%module_block:
+       println($check_message)'
+    
+  | '#%module_block:
+       println("hello, aws")
        $x
        ...'
     
-
+// add more cases and error messages
 decl.macro
 | 'let $(x :: Identifier) = $(y :: Group)' :
     'def $x = $y'
@@ -70,21 +87,16 @@ decl.macro
     'error(~who : #'define, " missing body when defining a variable")'   
 | 'let $(x :: Identifier) : $(y :: Group)' :
     'error(~who : #'define, "can't use : in place of = when defining a variable")'
-// missing body, x is not an id, multiple bodies and all of the above plus : returns an error
-// ask about : error when returning an empty body
 
+// add more cases and error messages
 decl.macro 
 | 'function $(fun_id :: Identifier)($(arg :: Identifier), ...) : $(body :: Group)' :
     'fun $fun_id($arg, ...) : $body '
 | 'function $(fun_id :: Identifier)($(arg :: Identifier), ...) = $(body :: Group)' :
     'error(~who : #'$fun_id, "can't use = in place of : when defining a function")'
-// fun_id not an identifier or an arg is not identifier
 
-// fix some of these cases
-// add checking for bound ids
-// ask about id || num
 
-// def is gonna expand to a macro that does the checking and a function
+// these should be much simpler, check macro generating macros
 expr.macro
 | 'expt($(x :: Identifier), $(y :: Identifier))' : 'math.expt($x, $y)'
 | 'expt($(x :: Number), $(y :: Identifier))' : 'math.expt($x, $y)'
@@ -126,134 +138,54 @@ function check_expect(expr, expected):
 
 function sqr(x):
   x * x
-/*
-export:
-  rename:
-    math.sin as sin
-    math.cos as cos
-    gt as >
-    lt as <
-    numeq as ==
-    gte as >=
-    lte as <=
-    mycond as cond
-  check_expect
-  function
-  sqr
-  number_to_string
-  true
-  false 
-  iseqstring
 
-// add a case w the literal else instead of ~else
+def true = #true
+def false = #false
+
+operator (x :: Number) gt (y :: Number):
+  ~weaker_than : other
+  ~stronger_than : && ||
+  x > y
+
+operator (x :: Number) gte (y :: Number):
+  ~weaker_than : other
+  ~stronger_than : && ||
+  x >= y
+
+operator (x :: Number) lt (y :: Number):
+  ~weaker_than : other
+  ~stronger_than : && ||
+  x < y
+
+operator (x :: Number) lte (y :: Number):
+  ~weaker_than : other
+  ~stronger_than : && ||
+  x <= y
+
+operator x eq y:
+  ~weaker_than : other
+  ~stronger_than : && ||
+  x == y
+
+// q-exp should return true or false
 expr.macro
-| 'mycond
-   | $q0 $q0b ... : $a0
+| 'IF
+   | $(q_exp_00 :: Group) : $(a_exp_00 :: Group)
    | ...
-   | else : $an' : 'cond
-                    | $q0 $q0b ... : $a0
-                    | ...
-                    | ~else : $an'
-| 'mycond
-   | $q0 $q0b ... : $a0
-   | ...
-   | $qn $qnb ... : $an' : 'cond
-                            | $q0 $q0b ... : $a0
-                            | ...
-                            | $qn $qnb ... : $an'
-                        
-import: pict as p
-        lib("pict/main.rkt") as pict: expose #{pict->bitmap} as to_bitmap
-                                      expose #{bitmap} as topict
-        lib("pict/convert.rkt"): expose #{pict-convert} as pict_convert
-        lib("2htdp/image.rkt"): expose #{image->color-list} as image_to_ls
-                                expose #{save-image} as savesnip
-/// TODO: trying to convert an image to a pict
-                                
-// def ax = p.rectangle(~width: 40, ~height: 20, ~fill: "lightblue", ~line: #'inherit)
+   | else : $(els_ans :: Group)' :
+    'cond
+     | $q_exp_00 : $a_exp_00
+     |  ...
+     | ~else : $els_ans'
 
-// def ay = p.rectangle(~width: 40, ~height: 120, ~fill: "lightblue", ~line: #'inherit)
-
-// image_to_ls(pict.to_bitmap(ax)) == image_to_ls(pict.to_bitmap(ay))
-
-// image_to_ls(pict.to_bitmap(ax)) == image_to_ls(pict.to_bitmap(ax))
-                                      
-fun sniptopict(image,fun_id = "fun", index ="1st"):
-  if image is_a p.Pict
-  | image
-  | if to_string(image) in {"object:image-snip%(#'#{...}, #'#{...})",
-                            "object:pict-snip%(#'#{...}, #'#{...})"}
-    | def file_name = to_string(Symbol.gen("image")) ++ ".png"
-      savesnip(pict.to_bitmap(topict(image)), file_name)
-      def img = p.bitmap(file_name)
-      filesystem.delete(file_name)
-      img
-    | error(~who: to_string(fun_id),
-            "expects a picture as " ++ index ++ " argument",
-            ~details: ["given:",image])
-      
-expr.macro 'check_expect($a, $b)':
-  let aa = Syntax.unwrap_all('$a')
-  //println(Syntax.unwrap_all('$a') is_a Syntax)
-  //println(a is_a Syntax)
-  // if Syntax.unwrap_all('$a') is_a Number && Syntax.unwrap_all('$b') is_a Number
-  //println('$a')
-  //println(eval('$a'))
-  //println('«$('$a')»')
-  'if $a is_a Number && $b is_a Number
-   | if math.equal($a,$b)
-     |check $b ~is $b
-     |check $a ~is $b
-   | if ($a is_a p.Pict || to_string($a) in {"object:image-snip%(#'#{...}, #'#{...})", "object:pict-snip%(#'#{...}, #'#{...})", "object:image%(#'#{...}, #'#{...})"}) && ($b is_a p.Pict || to_string($b) in {"object:image-snip%(#'#{...}, #'#{...})", "object:pict-snip%(#'#{...}, #'#{...})", "object:image%(#'#{...}, #'#{...})"})
-     | println(image_to_ls(pict.to_bitmap(sniptopict($a))).length())
-       println(image_to_ls(pict.to_bitmap(sniptopict($b))).length())
-       def x1 = $a
-       def x2 = $b
-       println(x1)
-       println(x2)
-       println(image_to_ls(pict.to_bitmap(sniptopict(x1))).length())
-       println(image_to_ls(pict.to_bitmap(sniptopict(x2))).length())
-       if image_to_ls(pict.to_bitmap(x1)) == image_to_ls(pict.to_bitmap(sniptopict(x2)))
-       | check 1 ~is 1
-         println("great success")
-       | println("wow not equal again")//check $a ~is $b
-         println("")
-     | check $a ~is $b
-   '
-  // works if both subjects are images or function calls to images but fails if they are different
-  
-   // | println("aha:")
-//   | check $a ~is $b' // need to convert images to bitmaps
-  /*
-  if (Syntax.unwrap_all('$a') is_a Number && Syntax.unwrap_all('$b') is_a Number) // || eval('$a') is_a Number && eval('$b') is_a Number
-  | 'block:
-       let x = $a
-       let y = $b
-    //   print(x is_a Number)
-      // print(y is_a Number)
-      // print($a is_a Number)
-       //print($b is_a Number)
-       if math.equal(x,y)
-       |check y ~is y
-       |check x ~is y'
-  | '"ahha"'*/
-  //| 'check $a ~is $b'
-
-
-// fix this macro
-expr.macro 'check_expect($actual, $expected)' : 'check $actual ~is $expected'
-| 'check_expect($actual, $(expected :: Number))' : 'math.equal($actual, $expected)'
-| 'check_expect($actual, $expected)' :
-    print(Syntax.unwrap_all('$actual') is_a Number)
-    let act = '$actual'
-    print('$act')
-    let expct = '$expected'
-    if Syntax.unwrap_all('$act') is_a Number || Syntax.unwrap_all('$expct') is_a Number
-    | 'check math.inexact($act) ~is math.inexact($expct)'
-    | 'check $act ~is $expct'
-
-
-*/
+| 'IF
+   | $(q_exp_00 :: Group) : $(a_exp_00 :: Group)
+   | $(q_exp_01 :: Group) : $(a_exp_01 :: Group)
+   | ...' :
+    'cond
+     | $q_exp_00 : $a_exp_00
+     | $q_exp_01 : $a_exp_01
+     | ...'
 // dont provide ... or work with it rn
 // collect tests and put them at the end / in a separate module
 // work on each week and complete its macros first
