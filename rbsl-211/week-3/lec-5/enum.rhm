@@ -1,0 +1,50 @@
+#lang shrubbery "../../../rbsl.rhm"
+import : "../../../rbsl-images/image.rhm" open
+// 1. Data definitions
+
+// A Boolean is one of:
+// - #true
+// - #false
+
+// A TrafficLight is one of:
+// - "red"
+// - "yellow"
+// - "green"
+
+// 2. Signature, purpose, header
+
+// draw-tl : TrafficLight -> Image
+// draw a simple traffic light
+//(define (draw-tl tl) ...)
+
+// 3. Examples
+
+define background = rectangle(100, 300, "solid", "black")
+/*
+(check-expect (draw-tl "red")
+              (place-image (circle 40 "solid" "red") 50 50 background))
+
+(check-expect (draw-tl "yellow")
+              (place-image (circle 40 "solid" "yellow") 50 150 background))
+
+(check-expect (draw-tl "green")
+              (place-image (circle 40 "solid" "green") 50 250 background))
+*/
+
+// 4. Template
+
+//(define (draw-tl tl)
+//  (cond [(string=? tl "red") ...]
+//        [(string=? tl "yellow") ...]
+//        [(string=? tl "green") ...]))
+
+// 5. Function definition
+
+function draw_tl(tl):
+  cond
+  | tl == "red" :
+      place_image(circle(40, "solid", "red"), 50, 50, background)
+  | tl == "yellow" :
+      place_image(circle(40, "solid", "yellow"), 50, 150, background)
+  | tl == "green" :
+      place_image(circle(40, "solid", "green"), 50, 250, background)
