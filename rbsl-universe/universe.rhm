@@ -17,6 +17,12 @@ export: animate
 
 expr.macro
 |'big_bang $(_init :: expr_meta.Parsed):
+              ~draw: $(_draw :: expr_meta.Parsed)':
+  'block:
+     let draw = fun (w): pict.to_bitmap($_draw(w))
+     $(expr_meta.pack_s_exp(['_big_bang', _init,
+                             ['_to_draw', 'draw']]))'
+|'big_bang $(_init :: expr_meta.Parsed):
               ~draw: $(_draw :: expr_meta.Parsed)
               ~tick: $(_tick :: expr_meta.Parsed)':
   'block:
@@ -37,6 +43,15 @@ expr.macro
                              ['_on_tick', _tick],
                              ['_to_draw', 'draw'],
                              ['_on_key', 'key'],
+                             ['_on_mouse', _mouse]]))'
+
+|'big_bang $(_init :: expr_meta.Parsed):
+              ~draw: $(_draw :: expr_meta.Parsed)
+              ~mouse: $(_mouse :: expr_meta.Parsed)':
+  'block:
+     let draw = fun (w): pict.to_bitmap($_draw(w))
+     $(expr_meta.pack_s_exp(['_big_bang', _init,
+                             ['_to_draw', 'draw'],
                              ['_on_mouse', _mouse]]))'
   
 fun draw(n):

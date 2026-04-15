@@ -28,7 +28,7 @@
 
 (check-expect (draw-posn here)
               (place-image dot 30 50 background))
-
+~
 (check-expect (draw-posn there)
               (place-image dot 70 45 background))
 

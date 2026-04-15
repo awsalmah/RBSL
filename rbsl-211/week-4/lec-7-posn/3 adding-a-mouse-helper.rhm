@@ -1,0 +1,60 @@
+#lang shrubbery "../../../rbsl.rhm"
+import : "../../../rbsl-images/image.rhm" open
+         "../../../rbsl-universe/universe.rhm" open
+
+// A Posn is (make-posn Number Number)
+// make-posn : Number Number -> Posn
+// posn-x : Posn -> Number
+// posn-y : Posn -> Number
+define here = posn(30, 50)
+define there = posn(70, 45)
+
+// draw-posn : Posn -> Image
+
+// 1. Data Definition
+// A Posn is (make-posn Number Number)
+
+// 2. Signature, Purpose, Header
+// draw-posn : Posn -> Image
+// draw a dot at the location of the given Posn
+// (define (draw-posn p) ...)
+
+// 3. Examples
+define background = empty_scene(300, 300)
+define dot = circle(30, "solid", "purple")
+place_image(dot, 30, 50, background)
+
+/*
+(check-expect (draw-posn here)
+              (place-image dot 30 50 background))
+
+(check-expect (draw-posn there)
+              (place-image dot 70 45 background))
+*/
+
+// 4. Template
+// (define (draw-posn p)
+//   (... (posn-x p) (posn-y p) ...) )
+
+// 5. Function definition
+function draw_posn(p):
+  place_image(dot, p.x, p.y, background)
+  
+
+// mouse : World(Posn) Number Number MouseEvent -> World(Posn)
+// move the posn to the mouse location
+// (define (mouse p x y me) ...)
+
+check_expect(mouse(here, 12, 34, "move"), posn(12, 34))
+check_expect(mouse(here, 56, 78, "drag"), posn(56, 78))
+
+// (define (mouse p x y me)
+//   (... (posn-x p) (posn-y p) x y me ...)) // but since we dont care about p or me, we can leave them out
+
+function mouse(p, x, y, me):
+  posn(x, y)
+
+// A World is a Posn
+big_bang posn(12, 34) :
+  ~draw: draw_posn // World(Posn) -> Image
+  ~mouse: mouse

@@ -7,6 +7,7 @@ export:
   //#{#%module-begin}
   all_from(rhombus):// might have to change the all here
     except: #%module_block
+            class
             def
             fun
             :: // check
@@ -19,6 +20,7 @@ export:
   rename:
     module_block as #%module_block
     let as define
+    math.abs as abs
     math.pi as pi
     math.sin as sin
     math.cos as cos
@@ -28,6 +30,8 @@ export:
     lte as <=
     eq as ==
     IF as cond
+  posn
+  is_a_posn
   function
   expt
   random
@@ -173,6 +177,7 @@ expr.macro
    | $(q_exp_00 :: Group) : $(a_exp_00 :: Group)
    | ...
    | else : $(els_ans :: Group)' :
+// modify the below to check if q_exp is a bool
     'cond
      | $q_exp_00 : $a_exp_00
      |  ...
@@ -182,10 +187,17 @@ expr.macro
    | $(q_exp_00 :: Group) : $(a_exp_00 :: Group)
    | $(q_exp_01 :: Group) : $(a_exp_01 :: Group)
    | ...' :
+    // modify the below to check if q_exp is a bool
     'cond
      | $q_exp_00 : $a_exp_00
      | $q_exp_01 : $a_exp_01
      | ...'
+
+class posn(x, y)
+
+fun is_a_posn(x :: posn):
+  x is_a posn
+  
 // dont provide ... or work with it rn
 // collect tests and put them at the end / in a separate module
 // work on each week and complete its macros first
