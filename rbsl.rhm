@@ -7,7 +7,6 @@ export:
   //#{#%module-begin}
   all_from(rhombus):// might have to change the all here
     except: #%module_block
-            class
             def
             fun
             :: // check
@@ -17,6 +16,8 @@ export:
             <=
             ==
             cond
+            class
+            to_string
   rename:
     module_block as #%module_block
     let as define
@@ -24,21 +25,30 @@ export:
     math.pi as pi
     math.sin as sin
     math.cos as cos
+    math.expt as expt
+    math.floor as floor
+    math.random as random
+    math.ceiling as ceiling
+    math.expt as expt
     gt as >
     gte as >=
     lt as <
     lte as <=
     eq as ==
     IF as cond
+    my_class as class
+    num_to_string as to_string
+    my_substr as substring
   posn
   is_a_posn
   function
-  expt
-  random
-  ceiling
   sqr
   true
   false
+  string_append
+  modulus
+  quotient
+  is_a_member
   
 // for stuff like string=? just use ==
 // for methods just define a rkt helper module
@@ -84,7 +94,7 @@ decl.macro 'module_block: $form; ...':
        ...'
     
 // add more cases and error messages
-decl.macro
+defn.macro
 | 'let $(x :: Identifier) = $(y :: Group)' :
     'def $x = $y'
 | 'let $(x :: Identifier) = ' :
@@ -99,39 +109,7 @@ decl.macro
 | 'function $(fun_id :: Identifier)($(arg :: Identifier), ...) = $(body :: Group)' :
     'error(~who : #'$fun_id, "can't use = in place of : when defining a function")'
 
-
-// these should be much simpler, check macro generating macros
-expr.macro
-| 'expt($(x :: Identifier), $(y :: Identifier))' : 'math.expt($x, $y)'
-| 'expt($(x :: Number), $(y :: Identifier))' : 'math.expt($x, $y)'
-| 'expt($(x :: Identifier), $(y :: Number))' : 'math.expt($x, $y)'
-| 'expt($(x :: Number), $(y :: Number))' : 'math.expt($x, $y)'
-| 'expt($w, $x , $y, $z, ...)' : def ls = [w, x, y, z, ...].length()
-                                 'error(~who : #'expt, "expects only 2 arguments, but found " ++ Syntax.to_source_string('$ls'))'
-| 'expt($(x :: Number), $y)' : 'error(~who : #'expt, "expects a number, given " ++ Syntax.to_source_string('$y'))'
-| 'expt($x, $(y :: Number))' : 'error(~who : #'expt, "expects a number, given " ++ Syntax.to_source_string('$x'))'
-| 'expt($x)' : 'error(~who : #'expt, "expected 2 arguments but found only 1")'
-| 'expt()' : 'error(~who : #'expt, "expected 2 arguments but found none")'
-| 'expt' : 'error(~who : #'expt, "expected a function call")'
-
-expr.macro
-| 'random($(x :: Identifier))' : 'math.random($x)'
-| 'random($(x :: Number))' : 'math.random($x)'
-| 'random($x , $y, $z, ...)' : def ls = [x, y, z, ...].length()
-                               'error(~who : #'random, "expects only 1 argument, but found " ++ Syntax.to_source_string('$ls'))'
-| 'random($x)' : 'error(~who : #'random, "expects a number, given " ++ Syntax.to_source_string('$x'))'
-| 'random()' : 'error(~who : #'random, "expected 1 argument but found none")'
-| 'random' : 'error(~who : #'random, "expected a function call")'
-
-expr.macro
-| 'ceiling($(x :: Identifier))' : 'math.ceiling($x)'
-| 'ceiling($(x :: Number))' : 'math.ceiling($x)'
-| 'ceiling($x , $y, $z, ...)' : def ls = [x, y, z, ...].length()
-                                'error(~who : #'ceiling, "expects only 1 argument, but found " ++ Syntax.to_source_string('$ls'))'
-| 'ceiling($x)' : 'error(~who : #'ceiling, "expects a number, given " ++ Syntax.to_source_string('$x'))'
-| 'ceiling()' : 'error(~who : #'ceiling, "expected 1 argument but found none")'
-| 'ceiling' : 'error(~who : #'ceiling, "expected a function call")'
-
+// check macro generating macros
 
 function check_expect(expr, expected):
   if expr is_a Number && expected is_a Number
@@ -147,27 +125,27 @@ def true = #true
 def false = #false
 
 operator (x :: Number) gt (y :: Number):
-  ~weaker_than : other
+  ~weaker_than : ~other
   ~stronger_than : && ||
   x > y
 
 operator (x :: Number) gte (y :: Number):
-  ~weaker_than : other
+  ~weaker_than : ~other
   ~stronger_than : && ||
   x >= y
 
 operator (x :: Number) lt (y :: Number):
-  ~weaker_than : other
+  ~weaker_than : ~other
   ~stronger_than : && ||
   x < y
 
 operator (x :: Number) lte (y :: Number):
-  ~weaker_than : other
+  ~weaker_than : ~other
   ~stronger_than : && ||
   x <= y
 
 operator x eq y:
-  ~weaker_than : other
+  ~weaker_than : ~other
   ~stronger_than : && ||
   x == y
 
@@ -195,9 +173,44 @@ expr.macro
 
 class posn(x, y)
 
-fun is_a_posn(x :: posn):
+// is_posn
+fun is_a_posn(x):
   x is_a posn
+
+// posn.x(posn(1,2)) prevent this
+  // call it struct
+defn.macro 'my_class $class_name($f0, ...)':
+  'class $class_name($f0, ...)'
+  // try using format-id
+  // might have to replace methods with function calls
   
+
+fun string_append_helper(w, zls):
+  match zls
+  | [] : w
+  | [a , b, ...] : string_append_helper( w ++ a, [b, ...])
+  
+fun string_append(x :: String, y :: String, z :: String, ...):
+  string_append_helper( x ++ y, [z, ...])
+
+fun num_to_string(x):
+  to_string(x)
+
+fun my_substr(str, start, end = str.length()):
+  String.substring(str, start, end)
+
+fun modulus(x, y):
+  x mod y
+
+fun quotient(x, y):
+  x div y
+
+fun is_a_member(x, ls):
+  ls.contains(x)
+// - check string append and num to string
+// - check the class declaration macro
+//   so we can add is_a_class-name
+
 // dont provide ... or work with it rn
 // collect tests and put them at the end / in a separate module
 // work on each week and complete its macros first

@@ -1,0 +1,73 @@
+#lang shrubbery "../../../rbsl.rhm"
+
+// An address is (make-address Number String)
+class address(number, street)
+define luddy = address(700, "Woodlawn Ave")
+
+address(1, "Main St")
+address(1, "Main St").number
+1 + address(1, "Main St").number
+address(1 + address(1, "Main St").number, "Main St")
+address(1 + address(1, "Main St").number, address(1, "Main St").street)
+
+define our_house = address(1, "Main St")
+address(1 + our_house.number, our_house.street)
+
+define here = address(30, "Main St")
+define there = address(70, "Penny Ln")
+
+// A Person is (make-person String Number)
+class person(name, age)
+define me = person("Alice", 37)
+define you = person("Bob", 22)
+there.number - here.number
+
+
+// Exercise 5
+// Copy the expressions below into your Definitions Window.
+// What are their results? Try to predict the results before asking DrRacket.
+// (If it runs into an error, write “error” after the last step.)
+//   (- (address-number there) (address-number here))
+// = ???
+// = ...
+// (- (address-number there) (address-number here))
+// (- (address-number (make-address 70 "Penny Ln")) (address-number here))
+// (- (address-number (make-address 70 "Penny Ln")) (address-number here))
+// (- 70 (address-number here))
+// (- 70 (address-number (make-address 30 "Main St")))
+// (- 70 30)
+40
+
+//   (< (person-age me) (person-age you))
+// = ???
+// = ...
+// (< (person-age me) (person-age you))
+// (< (person-age (make-person "Alice" 37)) (person-age you))
+// (< 37 (person-age you))
+// (< 37 (person-age (make-person "Bob" 22)))
+// (< 37 22)
+#false
+     
+//   (address-number (address-number there))
+// = ???
+// = ...
+// (address-number (address-number there))
+// (address-number (address-number (make-address 70 "Penny Ln")))
+// (address-number 70)
+// error
+     
+//   (person-age (make-person "Carol" 21))
+// = ???
+// (person-age (make-person "Carol" 21))
+21
+     
+//   (make-person (person-name me) (+ 1 (person-age me)))
+// = ???
+// (make-person (person-name me) (+ 1 (person-age me)))
+// (make-person (person-name (make-person "Alice" 37)) (+ 1 (person-age me)))
+// (make-person "Alice" (+ 1 (person-age me)))
+// (make-person "Alice" (+ 1 (person-age (make-person "Alice" 37))))
+// (make-person "Alice" (+ 1 37))
+person("Alice", 38)
+
+// Show step-by-step calculations by adding comments. Use the Stepper to confirm that your steps are correct.

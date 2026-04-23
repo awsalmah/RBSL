@@ -1,0 +1,65 @@
+#lang shrubbery "../../../rbsl.rhm"
+
+// 2 Designing functions using structures
+
+// 1. Data Definitions
+
+// An address is (make-address Number String)
+class address(number, street)
+define luddy = address(700, "Woodlawn Ave")
+
+// 2. Signature, Purpose, Header
+
+// format-address : Address -> String
+// write the address as on a letter
+// (define (format-address a) ...)
+
+// 3. Examples
+check_expect(format_address(luddy), "700 Woodlawn Ave")
+check_expect(format_address(address(1, "Main St")), "1 Main St")
+
+// 4. Template
+// (define (format-address a)
+//   (... (address-number a) ... (address-street a) ...))
+
+// 5. Function Definition
+
+// string-append : String String -> String
+// number->string : Number -> String
+function format_address(a):
+  string_append(to_string(a.number),
+                " ",
+                a.street)
+
+// 6. Tests
+
+
+// Exercise 6
+// Finish designing the following function.
+
+// 1. Data Definitions
+// A Person is (make-person String Number)
+class person(name, age)
+     
+// A Boolean is one of:
+// - true
+// - false
+     
+// 2. Signature, Purpose, Header
+// teenager? : Person -> Boolean
+// is a given person 13-19 years old?
+// (define (teenager? p) ...)
+     
+// 3. Examples
+check_expect(is_a_teenager(person("Alice", 37)), false)
+check_expect(is_a_teenager(person("Bob", 14)), true)
+
+// 4. Template
+// (define (teenager? p)
+//   (... (person-name p) ... (person-age p) ...))
+
+// 5. Definition
+function is_a_teenager(p):
+  p.age >= 13 && p.age <= 19
+  
+// 6. Tests

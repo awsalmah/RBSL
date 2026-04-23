@@ -1,0 +1,79 @@
+#lang shrubbery "../../../rbsl.rhm"
+// Lecture 8 : Structures
+// Defining structures
+
+// Below is one example of a data definition:
+// An Address is (make-address Number String)
+
+class address(number, street)
+
+address(700, "Woodlawn Ave")
+address(1600, "Pennsylvania Ave")
+
+// todo check this
+address.number(address(700, "Woodlawn Ave"))
+address(700, "Woodlawn Ave").number
+address(1600, "Pennsylvania Ave").number
+
+address(700, "Woodlawn Ave").street
+address(1600, "Pennsylvania Ave").street
+
+// A Point is (make-point Number Number)
+class point(x, y)
+
+point(1, 2)
+point(100, 0)
+
+point(1, 2).x
+point(1, 20).x
+
+
+// Exercise 1
+// Copy the definitions below into your Definitions Window.
+// Make sure you know which lines are data definitions,
+// which lines are structure definitions, and which lines are constant definitions.
+
+// An Address is (make-address Number String)
+// (define-struct address [number street])
+define here = address(30, "Main St")
+define there = address(70, "Penny Ln")
+     
+// A Person is (make-person String Number)
+class person(name, age)
+define me = person("Alice", 37)
+define you = person("Bob", 22)
+
+// Then, copy the expressions below into your Definitions Window.
+// What are their results? Try to predict the results before asking DrRacket.
+// (If it runs into an error, write “error” after the last step.)
+
+// Exercise 1
+     
+//   (address-street there)
+// = (address-street (make-address 70 "Penny Ln"))
+// = ???
+"Penny Ln"
+
+//   (address-number here)
+// = ???
+// = ...
+// (address-number (make-address 30 "Main St"))
+30
+
+//   (person-name you)
+// = ???
+// = ...
+// (person-name (make-person "Bob" 22))
+"Bob"
+
+//   (address-street me)
+// = ???
+// = ...
+// (address-street (make-person "Alice" 37))
+// error
+
+//   (make-person "Carol" 21)
+// = ???
+person("Carol", 21)
+
+// Show step-by-step calculations by adding comments. Use the Stepper to confirm that your steps are correct.

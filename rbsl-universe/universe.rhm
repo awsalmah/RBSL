@@ -17,6 +17,9 @@ export: animate
 
 expr.macro
 |'big_bang $(_init :: expr_meta.Parsed):
+    ($(kw :: Keyword): ($rhs :: expr_meta.Parsed)) ...':
+   '1'
+|'big_bang $(_init :: expr_meta.Parsed):     
               ~draw: $(_draw :: expr_meta.Parsed)':
   'block:
      let draw = fun (w): pict.to_bitmap($_draw(w))

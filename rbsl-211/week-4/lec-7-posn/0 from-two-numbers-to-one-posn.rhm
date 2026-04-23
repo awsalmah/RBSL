@@ -24,7 +24,6 @@ here.x
 there.x
 posn(12, 34).x
 
-
 // posn-y : Posn -> Number
 here.y
 there.y
