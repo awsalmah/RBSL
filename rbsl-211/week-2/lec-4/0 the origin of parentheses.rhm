@@ -1,8 +1,8 @@
 #lang shrubbery "../../../rbsl.rhm"
 // Lecture 4: The design recipe
 // The origin of parentheses
-import : "../../../rbsl-images/image.rhm" open
-         "../../../rbsl-universe/universe.rhm" open
+import : "../../../rbsl-images/image.rhm"
+         "../../../rbsl-universe/universe.rhm"
          
 // Always draw a bubble around what you want to operate on.
 // To save time, draw the left edge and the right edge instead of a bubble.

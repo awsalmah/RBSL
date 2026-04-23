@@ -4,7 +4,28 @@ import :
   rhombus/meta open
 
 export:
-  //#{#%module-begin}
+  #{#%module-begin}
+  rename module_block as #%module_block
+  #{#%top-interaction}
+  #{#%interaction}
+  #%literal
+  +
+  -
+  *
+  /
+  #%parens
+  rename imp as import
+  #%call
+  rename let as define
+  function
+  rename math.expt as expt
+  rename math.pi as pi
+  rename math.random as random
+  rename math.ceiling as ceiling
+  check_expect
+  sqr
+  rename to_str as to_string
+/*
   all_from(rhombus):// might have to change the all here
     except: #%module_block
             def
@@ -18,6 +39,33 @@ export:
             cond
             class
             to_string
+*/
+
+/*
+decl.macro 'mb: $form; ...':
+  '#%module_block:
+     println("welcome to rbsl")
+     $form
+     ...'
+*/
+
+decl.macro 'imp : $file_path_0
+                  $file_path_1
+                  ...':
+  'import :
+     $file_path_0 open
+     $file_path_1 open
+     ...'
+
+/*
+export :
+  #{#%module-begin}
+  #%literal
+  rename :
+    mb as #%module_block
+    let as define
+*/
+  /*
   rename:
     module_block as #%module_block
     let as define
@@ -49,7 +97,8 @@ export:
   modulus
   quotient
   is_a_member
-  
+*/
+            
 // for stuff like string=? just use ==
 // for methods just define a rkt helper module
 // write functions unless you need to use a macro
@@ -84,12 +133,13 @@ decl.macro 'module_block: $form; ...':
   if num_of_checks > 0
 
   | '#%module_block:
+       println("welcome to rbsl, le check_expect")
        $x
        ...
        println($check_message)'
     
   | '#%module_block:
-       println("hello, aws")
+       println("welcome to rbsl")
        $x
        ...'
     
@@ -193,7 +243,7 @@ fun string_append_helper(w, zls):
 fun string_append(x :: String, y :: String, z :: String, ...):
   string_append_helper( x ++ y, [z, ...])
 
-fun num_to_string(x):
+fun to_str(x):
   to_string(x)
 
 fun my_substr(str, start, end = str.length()):
