@@ -15,7 +15,7 @@ define there = posn(70, 45)
 //(define (draw-posn p) ...)
 
 // 3. Examples
-import : "../../../rbsl-images/image.rhm" open
+import : "../../../rbsl-images/image.rhm"
 
 define background = empty_scene(300, 300)
 define dot = circle(30, "solid", "purple")
@@ -47,7 +47,7 @@ function mouse(p, x, y, me):
 
 
 // A World is a Posn
-import "../../../rbsl-universe/universe.rhm" open
+import "../../../rbsl-universe/universe.rhm"
 big_bang posn(12, 34) :
   ~draw: draw_posn
   ~mouse: mouse

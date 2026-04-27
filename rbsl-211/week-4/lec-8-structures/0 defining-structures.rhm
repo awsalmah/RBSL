@@ -5,7 +5,7 @@
 // Below is one example of a data definition:
 // An Address is (make-address Number String)
 
-class address(number, street)
+struct address(number, street)
 
 address(700, "Woodlawn Ave")
 address(1600, "Pennsylvania Ave")
@@ -19,7 +19,7 @@ address(700, "Woodlawn Ave").street
 address(1600, "Pennsylvania Ave").street
 
 // A Point is (make-point Number Number)
-class point(x, y)
+struct point(x, y)
 
 point(1, 2)
 point(100, 0)
@@ -39,7 +39,7 @@ define here = address(30, "Main St")
 define there = address(70, "Penny Ln")
      
 // A Person is (make-person String Number)
-class person(name, age)
+struct person(name, age)
 define me = person("Alice", 37)
 define you = person("Bob", 22)
 

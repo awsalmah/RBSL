@@ -1,7 +1,7 @@
 #lang shrubbery "../../../rbsl.rhm"
 
 // An address is (make-address Number String)
-class address(number, street)
+struct address(number, street)
 define luddy = address(700, "Woodlawn Ave")
 
 address(1, "Main St")
@@ -17,7 +17,7 @@ define here = address(30, "Main St")
 define there = address(70, "Penny Ln")
 
 // A Person is (make-person String Number)
-class person(name, age)
+struct person(name, age)
 define me = person("Alice", 37)
 define you = person("Bob", 22)
 there.number - here.number

@@ -1,5 +1,5 @@
 #lang shrubbery "../../../rbsl.rhm"
-import : "../../../rbsl-images/image.rhm" open
+import : "../../../rbsl-images/image.rhm"
 // bigger numbers
 
 // tax : Number -> Number

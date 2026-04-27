@@ -1,7 +1,7 @@
 #lang shrubbery "../../../rbsl.rhm"
 
 // A Point is (make-point Number Number)
-class point(x, y)
+struct point(x, y)
 
 // make-point : Number Number -> Point
 // point-x : Point -> Number
@@ -9,12 +9,12 @@ class point(x, y)
 
 // point? : Anything -> Boolean
 
-// is_a_point(point(1, 2))
-// is_a_point(5)
-// is_a_point("hello")
+is_point(point(1, 2))
+is_point(5)
+is_point("hello")
 
 // An Address is (make-address Number String)
-class address(number, street)
+struct address(number, street)
 define luddy = address(700, "Woodlawn Ave")
 
 //make-address : Number String -> Address

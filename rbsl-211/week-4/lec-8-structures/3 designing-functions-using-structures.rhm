@@ -5,7 +5,7 @@
 // 1. Data Definitions
 
 // An address is (make-address Number String)
-class address(number, street)
+struct address(number, street)
 define luddy = address(700, "Woodlawn Ave")
 
 // 2. Signature, Purpose, Header
@@ -39,7 +39,7 @@ function format_address(a):
 
 // 1. Data Definitions
 // A Person is (make-person String Number)
-class person(name, age)
+struct person(name, age)
      
 // A Boolean is one of:
 // - true

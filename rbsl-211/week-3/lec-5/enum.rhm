@@ -1,5 +1,5 @@
 #lang shrubbery "../../../rbsl.rhm"
-import : "../../../rbsl-images/image.rhm" open
+import : "../../../rbsl-images/image.rhm"
 // 1. Data definitions
 
 // A Boolean is one of:

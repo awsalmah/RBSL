@@ -1,5 +1,5 @@
 #lang shrubbery "../../../rbsl.rhm"
-import : "../../../rbsl-images/image.rhm" open
+import : "../../../rbsl-images/image.rhm"
 // Lecture 5 : Multiple cases
 // 1 Booleans and conditions
 

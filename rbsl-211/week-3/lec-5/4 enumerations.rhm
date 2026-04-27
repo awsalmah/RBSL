@@ -1,6 +1,6 @@
 #lang shrubbery "../../../rbsl.rhm"
-import : "../../../rbsl-images/image.rhm" open
-         "../../../rbsl-universe/universe.rhm" open
+import : "../../../rbsl-images/image.rhm"
+         "../../../rbsl-universe/universe.rhm"
 // Enumerations
 
 // data definitions built up of lists of specific data examples are called enumerations e.g. boolean

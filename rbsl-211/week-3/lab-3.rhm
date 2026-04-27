@@ -1,6 +1,6 @@
 #lang shrubbery "../../rbsl.rhm"
-import : "../../rbsl-images/image.rhm" open
-         "../../rbsl-universe/universe.rhm" open
+import : "../../rbsl-images/image.rhm"
+         "../../rbsl-universe/universe.rhm"
 
 // Lab 3 : Multiple cases
 

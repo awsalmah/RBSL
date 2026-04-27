@@ -18,86 +18,51 @@ export:
   #%call
   rename let as define
   function
-  rename math.expt as expt
-  rename math.pi as pi
-  rename math.random as random
-  rename math.ceiling as ceiling
-  check_expect
+  rename math.expt as expt // tk
+  rename math.pi as pi // tk
+  rename math.random as random // tk
+  rename math.ceiling as ceiling // tk
+  check_expect // need to fix this so it works with numbers and images correctly
   sqr
-  rename to_str as to_string
-/*
-  all_from(rhombus):// might have to change the all here
-    except: #%module_block
-            def
-            fun
-            :: // check
-            >
-            >=
-            <
-            <=
-            ==
-            cond
-            class
-            to_string
-*/
-
-/*
-decl.macro 'mb: $form; ...':
-  '#%module_block:
-     println("welcome to rbsl")
-     $form
-     ...'
-*/
-
-decl.macro 'imp : $file_path_0
-                  $file_path_1
-                  ...':
-  'import :
-     $file_path_0 open
-     $file_path_1 open
-     ...'
-
-/*
-export :
-  #{#%module-begin}
-  #%literal
-  rename :
-    mb as #%module_block
-    let as define
-*/
-  /*
-  rename:
-    module_block as #%module_block
-    let as define
-    math.abs as abs
-    math.pi as pi
-    math.sin as sin
-    math.cos as cos
-    math.expt as expt
-    math.floor as floor
-    math.random as random
-    math.ceiling as ceiling
-    math.expt as expt
-    gt as >
-    gte as >=
-    lt as <
-    lte as <=
-    eq as ==
-    IF as cond
-    my_class as class
-    num_to_string as to_string
-    my_substr as substring
-  posn
-  is_a_posn
-  function
-  sqr
+  rename to_str as to_string // ask about this
+  rename gt as >
+  rename gte as >=
+  rename lt as <
+  rename lte as <=
+  rename eq as ==
   true
   false
+  && // tk
+  || // tk
+  rename IF as cond
+  rename math.cos as cos // tk
+  rename math.sin as sin // tk
+  posn
+  is_posn
+  rename . as . // need to fix this 
+  rename math.abs as abs // tk
+  struct
   string_append
+  #%brackets // check this and ++ for list append
+  rename substr as substring
+  rename math.floor as floor // tk
   modulus
+  list_append
+  is_member
   quotient
-  is_a_member
-*/
+
+decl.macro
+| 'imp : $file_path_0
+         $file_path_1
+         ...':
+    'import :
+       $file_path_0 open
+       $file_path_1 open
+       ...'
+    
+| 'imp $file_path_0':
+    'import $file_path_0 open'
+    
             
 // for stuff like string=? just use ==
 // for methods just define a rkt helper module
@@ -143,7 +108,7 @@ decl.macro 'module_block: $form; ...':
        $x
        ...'
     
-// add more cases and error messages
+
 defn.macro
 | 'let $(x :: Identifier) = $(y :: Group)' :
     'def $x = $y'
@@ -152,7 +117,7 @@ defn.macro
 | 'let $(x :: Identifier) : $(y :: Group)' :
     'error(~who : #'define, "can't use : in place of = when defining a variable")'
 
-// add more cases and error messages
+
 decl.macro 
 | 'function $(fun_id :: Identifier)($(arg :: Identifier), ...) : $(body :: Group)' :
     'fun $fun_id($arg, ...) : $body '
@@ -161,6 +126,8 @@ decl.macro
 
 // check macro generating macros
 
+// update this to work with picts and to work if you have 6/10 && 0.6
+// the below works if you have 100.0 and 100
 function check_expect(expr, expected):
   if expr is_a Number && expected is_a Number
   | if math.equal(expr, expected)
@@ -199,54 +166,60 @@ operator x eq y:
   ~stronger_than : && ||
   x == y
 
-// q-exp should return true or false
+operator x and y:
+  x && y
+
+
 expr.macro
 | 'IF
    | $(q_exp_00 :: Group) : $(a_exp_00 :: Group)
    | ...
    | else : $(els_ans :: Group)' :
-// modify the below to check if q_exp is a bool
-    'cond
-     | $q_exp_00 : $a_exp_00
-     |  ...
-     | ~else : $els_ans'
 
+    'if [$q_exp_00, ...] is_a List.of(Boolean)
+     | cond
+       | $q_exp_00 : $a_exp_00
+       |  ...
+       | ~else : $els_ans
+     | error(~who : #'cond, "question result is not True or False")'
+    
 | 'IF
    | $(q_exp_00 :: Group) : $(a_exp_00 :: Group)
    | $(q_exp_01 :: Group) : $(a_exp_01 :: Group)
    | ...' :
-    // modify the below to check if q_exp is a bool
-    'cond
-     | $q_exp_00 : $a_exp_00
-     | $q_exp_01 : $a_exp_01
-     | ...'
+
+    'if [$q_exp_00, $q_exp_01, ...] is_a List.of(Boolean)
+     | cond
+       | $q_exp_00 : $a_exp_00
+       | $q_exp_01 : $a_exp_01
+       |  ...
+     | error(~who : #'cond, "question result is not True or False")'
+
 
 class posn(x, y)
 
-// is_posn
-fun is_a_posn(x):
+fun is_posn(x):
   x is_a posn
-
 // posn.x(posn(1,2)) prevent this
-  // call it struct
-defn.macro 'my_class $class_name($f0, ...)':
-  'class $class_name($f0, ...)'
-  // try using format-id
-  // might have to replace methods with function calls
   
+defn.macro 'struct $class_name($f0, ...)':
+  def pred = Syntax.make_id("is_" ++ to_string(class_name), class_name)
+  'class $class_name($f0, ...)
+   fun $pred(x): x is_a $class_name'
 
-fun string_append_helper(w, zls):
+
+fun append_helper(w, zls):
   match zls
   | [] : w
-  | [a , b, ...] : string_append_helper( w ++ a, [b, ...])
+  | [a , b, ...] : append_helper( w ++ a, [b, ...])
   
 fun string_append(x :: String, y :: String, z :: String, ...):
-  string_append_helper( x ++ y, [z, ...])
+  append_helper( x ++ y, [z, ...])
 
 fun to_str(x):
   to_string(x)
 
-fun my_substr(str, start, end = str.length()):
+fun substr(str, start, end = str.length()):
   String.substring(str, start, end)
 
 fun modulus(x, y):
@@ -255,13 +228,17 @@ fun modulus(x, y):
 fun quotient(x, y):
   x div y
 
-fun is_a_member(x, ls):
+fun is_member(x, ls):
   ls.contains(x)
+
+fun list_append(x :: List, y :: List, z :: List, ...):
+  append_helper( x ++ y, [z, ...])
+
 // - check string append and num to string
-// - check the class declaration macro
-//   so we can add is_a_class-name
+// - check the struct macro and dot operator
+//   so we can prevent posn.x(posn(1,2))
+//   but allow posn(1,2).x
 
 // dont provide ... or work with it rn
 // collect tests and put them at the end / in a separate module
 // work on each week and complete its macros first
-// module-begin
