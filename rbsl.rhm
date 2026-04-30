@@ -24,7 +24,7 @@ export:
   rename math.ceiling as ceiling // tk
   check_expect // need to fix this so it works with numbers and images correctly
   sqr
-  rename to_str as to_string // ask about this
+  rename to_str as to_string // think about this
   rename gt as >
   rename gte as >=
   rename lt as <
@@ -43,13 +43,14 @@ export:
   rename math.abs as abs // tk
   struct
   string_append
-  #%brackets // check this and ++ for list append
+  #%brackets // keep ++ for string append
   rename substr as substring
   rename math.floor as floor // tk
   modulus
   list_append
   is_member
   quotient
+  string_length
 
 decl.macro
 | 'imp : $file_path_0
@@ -234,7 +235,9 @@ fun is_member(x, ls):
 fun list_append(x :: List, y :: List, z :: List, ...):
   append_helper( x ++ y, [z, ...])
 
-// - check string append and num to string
+fun string_length(str):
+  str.length()
+
 // - check the struct macro and dot operator
 //   so we can prevent posn.x(posn(1,2))
 //   but allow posn(1,2).x
@@ -242,3 +245,8 @@ fun list_append(x :: List, y :: List, z :: List, ...):
 // dont provide ... or work with it rn
 // collect tests and put them at the end / in a separate module
 // work on each week and complete its macros first
+
+// start with making defhidden work functions students defined
+  // enforce first orderness
+// update big bang
+// then error messages
